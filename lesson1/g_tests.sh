@@ -20,5 +20,6 @@ run_test 2 3 2 3
 run_test 250 500 249 101
 run_test 8 12 7 3
 run_test 2500 5000 2499 961
-run_test 78 4934 77 77
+run_test 78 4934 77 4812
 run_test 78 126 77 5
+run_test 1661 4327 1107 6
