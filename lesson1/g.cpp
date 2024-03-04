@@ -49,8 +49,9 @@ int main(void) {
   std::vector<int> res;
   res.push_back(count_moves(x, y, p, 0));
   res.push_back(count_moves(x, y, p, 1));
-  res.push_back(count_moves(x, y, p, x * 0.5));
-  res.push_back(count_moves(x, y, p, 0.99 * x));
+  for (int i = 0; i < 40; i++) {
+    res.push_back(count_moves(x, y, p, x * 0.025 * i));
+  }
   std::sort(res.begin(), res.end());
 
   int result = -1;
