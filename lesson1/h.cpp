@@ -8,26 +8,20 @@ int main(void) {
   if (x1 == x2 || x1 == L - x2) {
     time = 0;
   } else {  // different position
-    long double t1 = -1, t2 = -1, r11, r12, r21, r22;
-    long double c1, c2;
-    if (v1 - v2 != 0) t1 = (x2 - x1) / (v1 - v2);
-    if (v1 + v2 != 0) t2 = (L - x1 - x2) / (v1 + v2);
-    r11 = x1 + v1 * t1;
-    r12 = x2 + v2 * t1;
-    r21 = x1 + v1 * t2;
-    r22 = x2 + v2 * t2;
-    // if(t1<0)  = (L+x2-x1) / (v1-v2);
-    // if (t1 < 0) time = (L + x2 - x1) / (-v1 - v2);
-    if (t1 < 0 && t2 >= 0)
-      time = t2;
-    else if (t1 >= 0 && t2 < 0)
-      time = t1;
-    else if (t1 >= 0 && t2 >= 0) {
-      if (r11 == r12 && r21 + r22 == L)
+    if (v1 == 0 & v2 == 0) {
+    } else {
+      long double t1 = -1, t2 = -1, r11, r12, r21, r22;
+      long double c1, c2;
+      if (v1 - v2 != 0) t1 = (x2 - x1) / (v1 - v2);
+      if (v1 + v2 != 0) t2 = (L - x1 - x2) / (v1 + v2);
+      // if (t2 < 0 && v1 < 0 && v2 < 0) t2 = -(L - x1 - x2) / (v1 + v2);
+      if (t1 < 0 && v1 - v2 != 0) t1 = (L - x2 + x1) / std::abs(v1 - v2);
+      if (t2 < 0 && v1 + v2 != 0) t2 = (2 * L - x2 - x1) / std::abs(v1 + v2);
+      if (t1 >= 0 && t2 >= 0)
         time = std::min(t1, t2);
-      else if (r11 == r12)
+      else if (t1 >= 0 && t2 < 0)
         time = t1;
-      else if (r21 + r22 == L)
+      else if (t1 < 0 && t2 >= 0)
         time = t2;
     }
   }

@@ -16,8 +16,8 @@ def run_test(data, **kwargs):
         if res[0].lower() != kwargs.get("answer").lower():
             print(f"WRONG ANSWER: {res[0]} != {kwargs.get('answer')}")
             return
-    if kwargs.get("value") and len(res) > 1:
-        if float(res[1]) != float(kwargs.get("value")):
+    if kwargs.get("value") != None and len(res) > 1:
+        if abs(float(res[1]) - float(kwargs.get("value"))) > 10e-9:
             print(
                 f"WRONG VALUE: {float(res[1])} != {float(kwargs.get('value'))}")
 
@@ -36,3 +36,13 @@ if result.returncode == 0:
     run_test("94 76 0 76 0", answer="yes", value=0.0000000000)
     run_test("948744004 861724643 848773505 584154450 730556189",
              answer="yes", value=0.2859497398)
+    run_test("938712409 11003268 0 278188417 0", answer="no")
+    run_test("10 8 8 6 7", answer="yes", value=0.4000000000)
+    run_test("6 2 3 5 2", answer="yes", value=1.000000000)
+    run_test("615143346 79387687 -80123649 306422480 -80123649",
+             answer="yes", value=2.4075923389)
+    run_test("6 1 -1 3 -1", answer="yes", value=1.000000000)
+    run_test("762899414 556082848 -539099316 556082848 -582799403",
+             answer="yes", value=0.0000000000)
+    run_test("977345779 636176199 0 165786447 815181433",
+             answer="yes", value=0.2151461330)
