@@ -41,8 +41,14 @@ if result.returncode == 0:
     run_test("6 2 3 5 2", answer="yes", value=1.000000000)
     run_test("615143346 79387687 -80123649 306422480 -80123649",
              answer="yes", value=2.4075923389)
-    run_test("6 1 -1 3 -1", answer="yes", value=1.000000000)
+    run_test("6 1 -1 3 -1", answer="yes", value=2.000000000)
     run_test("762899414 556082848 -539099316 556082848 -582799403",
              answer="yes", value=0.0000000000)
     run_test("977345779 636176199 0 165786447 815181433",
              answer="yes", value=0.2151461330)
+    run_test("82 42 -354891707 42 -354891707",
+             answer="yes", value=0.0000000000)
+    run_test("956390104 549514100 7 315097830 -7",
+             answer="yes", value=51569559.5714285714)
+    run_test("6 1 -1 3 1", answer="yes", value=2.000000000)
+    run_test("1000000000 10 1000000000 11 0", answer="yes", value=0.0000000000)

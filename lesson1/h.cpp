@@ -14,7 +14,9 @@ int main(void) {
       long double c1, c2;
       if (v1 - v2 != 0) t1 = (x2 - x1) / (v1 - v2);
       if (v1 + v2 != 0) t2 = (L - x1 - x2) / (v1 + v2);
-      // if (t2 < 0 && v1 < 0 && v2 < 0) t2 = -(L - x1 - x2) / (v1 + v2);
+      // else
+      //   t2 = (L - x1 - x2) / (std::abs(v1) + std::abs(v2));
+      if (t2 < 0 && v1 < 0 && v2 < 0) t2 = (-x1 - x2) / (v1 + v2);
       if (t1 < 0 && v1 - v2 != 0) t1 = (L - x2 + x1) / std::abs(v1 - v2);
       if (t2 < 0 && v1 + v2 != 0) t2 = (2 * L - x2 - x1) / std::abs(v1 + v2);
       if (t1 >= 0 && t2 >= 0)
