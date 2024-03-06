@@ -1,3 +1,4 @@
+#include <iomanip>
 #include <iostream>
 
 int main(void) {
@@ -14,10 +15,11 @@ int main(void) {
       long double c1, c2;
       if (v1 - v2 != 0) t1 = (x2 - x1) / (v1 - v2);
       if (v1 + v2 != 0) t2 = (L - x1 - x2) / (v1 + v2);
-      // else
-      //   t2 = (L - x1 - x2) / (std::abs(v1) + std::abs(v2));
+
       if (t2 < 0 && v1 < 0 && v2 < 0) t2 = (-x1 - x2) / (v1 + v2);
-      if (t1 < 0 && v1 - v2 != 0) t1 = (L - x2 + x1) / std::abs(v1 - v2);
+      if (t1 < 0 && v1 - v2 != 0)
+        t1 = std::min((L - x2 + x1) / std::abs(v1 - v2),
+                      (L - x1 + x2) / std::abs(v1 - v2));
       if (t2 < 0 && v1 + v2 != 0) t2 = (2 * L - x2 - x1) / std::abs(v1 + v2);
       if (t1 >= 0 && t2 >= 0)
         time = std::min(t1, t2);
@@ -27,10 +29,9 @@ int main(void) {
         time = t2;
     }
   }
-  std::cout.precision(10);
   if (time == -1)
     std::cout << "No";
   else
-    std::cout << "YES\n" << time;
+    printf("YES\n%.10Lf", time);
   return 0;
 }
