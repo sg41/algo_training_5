@@ -5,21 +5,20 @@ from sys import stdin
 def place_images(w, h, c, document):
     def process_paragraph(paragraph, current_y, current_x):
         fragment_width = 0
-        bypass = False
         for element in paragraph:
-            # if bypass:
-            #     if element.endswith(")"):
-            #         bypass = False
-            #     continue
             if element.startswith("(image"):
                 image_params = parse_image_parameters(element)
-                current_y, current_x = place_image(
-                    image_params, current_y, current_x)
+                current_y, current_x = place_image(fragment_width,
+                                                   image_params, current_y, current_x)
                 fragment_width = 0  # Reset fragment width after placing an image
-                # bypass = True
             else:
                 words = element.split()
                 for word in words:
+                    if (word == "\n"):
+                        current_y += h
+                        current_x = 0
+                        fragment_width = 0
+                        continue
                     word_width = len(word) * c
                     if fragment_width + word_width > w:
                         # Word doesn't fit in the current fragment, move to the next line
@@ -29,7 +28,6 @@ def place_images(w, h, c, document):
                     if fragment_width > 0:
                         # Add space before the word (except for the first word in the fragment)
                         fragment_width += c
-                    # print(f"{current_x} {current_y}")
                     current_x += word_width
                     fragment_width += word_width
 
@@ -38,7 +36,6 @@ def place_images(w, h, c, document):
     def parse_image_parameters(paragraph):
         image_params = {}
         # Избавляемся от "(image" в начале и ")" в конце строки
-        # image_str.replace("(image", "").replace(")", "")
         image_str = re.search(r"\(image(.+)\)", paragraph,
                               re.MULTILINE).group(1).strip()
         # Разбиваем строку на параметры
@@ -50,18 +47,21 @@ def place_images(w, h, c, document):
 
         return image_params
 
-    def place_image(image_params, current_y, current_x):
+    def place_image(fragment_width, image_params, current_y, current_x):
         x, y = current_x, current_y
         layout = image_params["layout"]
         width, height = int(image_params["width"]), int(image_params["height"])
 
         if layout == "embedded":
+            if fragment_width > 0:
+                # Add space before the image (except for the first word in the fragment)
+                current_x += c
             # Размещение рисунка с типом "embedded"
             if current_y + height > h:
                 # Если высота рисунка больше текущей высоты строки, увеличиваем высоту строки
                 current_y += height - h
-            print(f"{x} {y}")
-            return current_y, x + width + c  # Update current_x
+            print(f"{current_x} {current_y}")
+            return current_y, current_x + width  # Update current_x
 
         elif layout == "surrounded":
             # Размещение рисунка с типом "surrounded"
@@ -90,6 +90,10 @@ def place_images(w, h, c, document):
     current_y, current_x = 0, 0
 
     for paragraph in paragraphs:
+        # # Пропускаем пустые абзацы
+        # paragraph = paragraph.strip("\n")
+        # if not paragraph:
+        #     continue
         # Разбиваем абзац на элементы
         paragraph = re.findall(r"[^\(]+|\(image.+\)", paragraph, re.MULTILINE)
         current_y, current_x = process_paragraph(
