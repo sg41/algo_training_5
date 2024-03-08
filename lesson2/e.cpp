@@ -93,25 +93,27 @@ long long dp(std::vector<BerryIndex>& berry_index) {
   long long max = 0;
   long long max_h = 0;
   int max_h_index = 0;
-  for (int i = 1; i < n; i++) {
-    long long cur_max = 0;
-    long long cur_max_h = 0;
+  for (int i = 0; i < n; i++) {
+    long long cur_max = max;
+    long long cur_max_h = max_h;
     int cur_max_h_index = 0;
     for (int j = 0; j < n; j++) {
       dp[i][j].max = max_h + berry_index[j].second.first;
-      dp[i][j].h =
-          max_h + berry_index[j].second.first - berry_index[j].second.second;
+      dp[i][j].h = dp[i][j].max - berry_index[j].second.second;
       if (dp[i][j].max > cur_max_h) {
         cur_max_h_index = j;
         cur_max = dp[i][j].max;
         cur_max_h = dp[i][j].h;
         path[i] = j;
+        berry_index[j].second.first = 0;
+        berry_index[j].second.second = 0;
       }
     }
     max = cur_max;
     max_h = cur_max_h;
     max_h_index = cur_max_h_index;
   }
+  return max;
 }
 
 int main(void) {
@@ -136,6 +138,7 @@ int main(void) {
   } else {
     berry_index = berry_index_copy;
   }
+  // max_height = dp(berry_index);
 
   std::cout << max_height << std::endl;
   for (int i = 0; i < n; i++) {
