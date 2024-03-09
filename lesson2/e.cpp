@@ -82,22 +82,25 @@ bool sort_by_positive_second_first(BerryIndex a, BerryIndex b) {
   }
   return result;
 }
-long long count_max_height(std::vector<BerryIndex> berry_index) {
-  long long max_height = berry_index[0].second.first;
-  long long current_height = max_height - berry_index[0].second.second;
+std::pair<long long, long long> count_max_height(
+    std::vector<BerryIndex> berry_index, long long start_max,
+    long long start_height) {
+  long long max_height = start_max;
+  long long current_height = start_height;
   for (int i = 1; i < berry_index.size(); i++) {
     max_height =
         std::max(max_height, current_height + berry_index[i].second.first);
     current_height = current_height + berry_index[i].second.first -
                      berry_index[i].second.second;
   }
-  return max_height;
+  return std::make_pair(max_height, current_height);
 }
-long long count_max_height(std::vector<BerryIndex> berry_index,
-                           std::vector<BerryIndex> berry_index_minus) {
-  long long max_height = berry_index[0].second.first;
-  long long current_height = max_height - berry_index[0].second.second;
-  for (int i = 1; i < berry_index.size(); i++) {
+std::pair<long long, long long> count_max_height(
+    std::vector<BerryIndex> berry_index,
+    std::vector<BerryIndex> berry_index_minus) {
+  long long max_height = 0;
+  long long current_height = 0;
+  for (int i = 0; i < berry_index.size(); i++) {
     max_height =
         std::max(max_height, current_height + berry_index[i].second.first);
     current_height = current_height + berry_index[i].second.first -
@@ -109,7 +112,7 @@ long long count_max_height(std::vector<BerryIndex> berry_index,
     current_height = current_height + berry_index_minus[i].second.first -
                      berry_index_minus[i].second.second;
   }
-  return max_height;
+  return std::make_pair(max_height, current_height);
 }
 
 long long dp(std::vector<BerryIndex>& berry_index) {
@@ -162,17 +165,29 @@ int main(void) {
       berry_index_minus.push_back(berry_index[i]);
     }
   }
-  std::sort(berry_index_plus.begin(), berry_index_plus.end(),
-            sort_by_low_positive);
+  // std::sort(berry_index_plus.begin(), berry_index_plus.end(),
+  //           sort_by_low_positive);
   std::sort(berry_index_minus.begin(), berry_index_minus.end(),
             sort_by_low_positive);
-  long long max_height = count_max_height(berry_index);
+  long long max_height, current_height;
+  std::tie(max_height, current_height) =
+      count_max_height(berry_index_plus, 0, 0);
+  long long max_height2, current_height2;
+  std::tie(max_height2, current_height2) =
+      count_max_height(berry_index_minus, max_height, current_height);
+  max_height += max_height2;
   for (int i = 0; i < berry_index_plus.size(); i++) {
     std::swap(berry_index_plus[i],
               berry_index_plus[berry_index_plus.size() - 1]);
-    long long new_max = count_max_height(berry_index_plus, berry_index_minus);
+    long long new_max, nex_height;
+    std::tie(new_max, nex_height) =
+        count_max_height(berry_index_plus, berry_index_minus);
+    // long long new_max;
+    // new_max = current_height + berry_index_plus[i].second.second;
     if (new_max > max_height) {
       max_height = new_max;
+      // std::swap(berry_index_plus[i],
+      //           berry_index_plus[berry_index_plus.size() - 1]);
     } else {
       std::swap(berry_index_plus[berry_index_plus.size() - 1],
                 berry_index_plus[i]);
