@@ -29,20 +29,27 @@ int main(void) {
     }
   }
 
-  int imax[4], jmax[4];
+  int imax[5], jmax[5];
   std::tie(imax[0], jmax[0]) = find_max(field, -1, -1);
   long long max[4];
   max[0] = field[imax[0]][jmax[0]];
-
-  std::tie(imax[1], jmax[1]) = find_max(field, imax[0], -1);
-  max[1] = field[imax[1]][jmax[1]];
-
+  field[imax[0]][jmax[0]] = 0;
+  std::tie(imax[4], jmax[4]) = find_max(field, -1, -1);
+  if (imax[4] != imax[0] && jmax[4] != jmax[0]) {
+    std::tie(imax[1], jmax[1]) = find_max(field, imax[0], -1);
+    max[1] = field[imax[1]][jmax[1]];
+  } else if (imax[4] == imax[0]) {
+    std::tie(imax[1], jmax[1]) = find_max(field, imax[0], -1);
+    max[1] = field[imax[1]][jmax[1]];
+  } else if (jmax[4] == jmax[0]) {
+    std::tie(imax[1], jmax[1]) = find_max(field, -1, jmax[0]);
+    max[1] = field[imax[1]][jmax[1]];
+  }
   std::tie(imax[2], jmax[2]) = find_max(field, imax[0], jmax[1]);
   max[2] = field[imax[2]][jmax[2]];
 
   std::tie(imax[3], jmax[3]) = find_max(field, imax[1], jmax[0]);
   max[3] = field[imax[3]][jmax[3]];
-
   if (max[2] > max[3]) {
     std::cout << imax[1] + 1 << " " << jmax[0] + 1 << std::endl;
   } else {
