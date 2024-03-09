@@ -12,13 +12,13 @@ def run_test(data, **kwargs):
             res.pop(i)
     # print(data)
     # print(out)
-    if kwargs.get("answer") and len(res)>0:
+    if kwargs.get("answer") and len(res) > 0:
         if int(res[0]) != kwargs.get("answer"):
             print(f"WRONG ANSWER: {res[0]} != {kwargs.get('answer')}")
             return
     elif len(res) == 0:
         print(data)
-        print (err)
+        print(err)
         print("NO ANSWER")
     if kwargs.get("value") != None and len(res) > 1:
         if res[1] != kwargs.get("value"):
