@@ -30,7 +30,7 @@ def place_images(w, h, c, document):
                 image_list.pop(i)
                 continue
             if (start_x >= image["x"] and start_x <= image["x"]+image["width"]) and (
-                    start_y >= image["y"] and start_y <= image["y"]+fragment["height"]):
+                    start_y >= image["y"] and start_y <= image["y"]+image["height"]):
                 x = image["x"]+image["width"]
                 break
         if x >= w:
@@ -131,9 +131,10 @@ def place_images(w, h, c, document):
                 x = 0
             elif x + width + dx > w:
                 # Если рисунок выходит за правую границу страницы, смещаем его влево
-                x = width-w
+                x = w - width
+            else:
+                x += dx
             y += dy
-            x += dx
             print(f"{x} {y}")
             return current_y, current_x  # Update current_x
 
