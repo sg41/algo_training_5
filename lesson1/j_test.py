@@ -391,3 +391,89 @@ Q W E R T Y U I O P A S D F G H J K L Z X C V B N M
 0 87
 1 87
 """
+
+
+def test14():
+    def test():
+        j.place_images(3, 2, 1,
+                       """(image layout=surrounded width=2 height=1000) (image layout=surrounded width=2 height=1000) (image layout=surrounded width=2 height=1000) (image layout=surrounded width=2 height=1000) (image layout=surrounded width=2 height=1000) (image layout=surrounded width=2 height=1000) (image layout=surrounded width=2 height=1000) (image layout=surrounded width=2 height=1000) (image layout=surrounded width=2 height=1000) (image layout=surrounded width=2 height=1000) (image layout=surrounded width=2 height=1000) (image layout=surrounded width=2 height=1000) (image layout=surrounded width=2 height=1000) (image layout=surrounded width=2 height=1000) (image layout=surrounded width=2 height=1000) (image layout=surrounded width=2 height=1000) (image layout=surrounded width=2 height=1000) (image layout=surrounded width=2 height=1000) (image layout=surrounded width=2 height=1000) (image layout=surrounded width=2 height=1000) ab abc (image layout=surrounded width=2 height=1000)"""
+                       )
+    f = io.StringIO()
+    with redirect_stdout(f):
+        test()
+    s = f.getvalue()
+    assert s == """0 0
+0 1000
+0 2000
+0 3000
+0 4000
+0 5000
+0 6000
+0 7000
+0 8000
+0 9000
+0 10000
+0 11000
+0 12000
+0 13000
+0 14000
+0 15000
+0 16000
+0 17000
+0 18000
+0 19000
+0 20004
+"""
+
+
+def test15():
+    def test():
+        j.place_images(31, 1, 1,
+                       """(image layout=surrounded width=1 height=400)
+(image layout=surrounded width=1 height=500) a
+(image layout=surrounded width=1 height=450) a
+(image layout=surrounded width=1 height=475) a
+(image layout=surrounded width=1 height=400) a
+(image layout=surrounded width=1 height=475) a
+(image layout=surrounded width=1 height=450) a
+(image layout=surrounded width=1 height=500) a
+(image layout=surrounded width=1 height=400) a
+(image layout=surrounded width=1 height=500) a
+(image layout=surrounded width=1 height=450) a
+(image layout=surrounded width=1 height=500) a
+(image layout=surrounded width=1 height=400) a
+(image layout=surrounded width=1 height=500) a
+(image layout=surrounded width=1 height=450) a
+(image layout=surrounded width=1 height=500) a
+q q q q q q q q q q q q q q q q q q q q q q q q q q
+(image layout=floating width=1 height=1 dx=0 dy=0)
+qq
+(image layout=floating width=1 height=1 dx=0 dy=0)
+qqqq
+(image layout=floating width=1 height=1 dx=0 dy=0)
+"""
+                       )
+    f = io.StringIO()
+    with redirect_stdout(f):
+        test()
+    s = f.getvalue()
+    assert s == """0 0
+1 0
+3 0
+5 0
+7 0
+9 0
+11 0
+13 0
+15 0
+17 0
+19 0
+21 0
+23 0
+25 0
+27 0
+29 0
+23 2
+8 400
+6 475
+"""

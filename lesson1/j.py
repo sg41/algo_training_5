@@ -17,7 +17,7 @@ def place_images(w, h, c, document):
             if image["y"]+image["height"] <= y:
                 image_list.pop(i)
                 continue
-            if x < image["x"] and y > image["y"] and y <= image["y"]+image["height"]:
+            if x <= image["x"] and y > image["y"] and y <= image["y"]+image["height"]:
                 result = image["x"]-x
                 if result < min:
                     min = result
@@ -32,8 +32,8 @@ def place_images(w, h, c, document):
             y += current_height
             current_height = h
             x = 0
-
-        while True:
+        width = 0
+        while x < w:
             for i, image in enumerate(image_list):
                 if image["y"]+image["height"] <= y:
                     image_list.pop(i)
@@ -41,15 +41,19 @@ def place_images(w, h, c, document):
                 if (x >= image["x"] and x <= image["x"]+image["width"]) and (
                         y >= image["y"] and y < image["y"]+image["height"]):
                     x = image["x"]+image["width"]
-                    break
+                    # width = get_possible_width(x, y)
+                    # if width > 0:
+                    #     break
+                    # else:
+                    #     x += 1
             if x >= w:
                 x = 0
                 y += current_height
                 current_height = h
             else:
                 break
-
-        fragment = {"width": get_possible_width(x, y), "height": current_height,
+        width = get_possible_width(x, y)
+        fragment = {"width": width, "height": current_height,
                     "start_x": x,
                     "start_y": y}
         # new current_y, current_x
@@ -57,6 +61,7 @@ def place_images(w, h, c, document):
 
     def process_paragraph(paragraph, current_y, current_x):
         nonlocal last_floating
+        last_floating = False
         current_y, current_x = create_fragment(
             current_x, current_y)
         for element in paragraph:
@@ -126,7 +131,7 @@ def place_images(w, h, c, document):
 
         elif layout == "surrounded":
             # Размещение рисунка с типом "surrounded"
-            if width+current_x > fragment["width"]:
+            while width+current_x > fragment["width"]:
                 # TODO Word doesn't fit in the current fragment, move to the next line
                 current_y, current_x = create_fragment(
                     fragment["start_x"]+fragment["width"], current_y)
