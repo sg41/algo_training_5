@@ -477,3 +477,84 @@ qqqq
 8 400
 6 475
 """
+
+
+def test23():
+    def test():
+        j.place_images(100, 3, 9,
+                       """(image
+height=1
+width=18 layout=embedded) e7 u
+(image
+width=1
+layout=embedded
+height=1) (image layout=embedded width=2 height=2)
+(image width=1
+layout=surrounded
+height=7)
+(image height=8 width=1 layout=surrounded) (image height=1
+layout=embedded width=9)
+(image height=1
+width=18 layout=embedded) (image
+layout=surrounded height=1
+width=4)
+(image height=2
+layout=surrounded
+width=4) (image layout=surrounded height=7
+width=5)
+(image height=2
+layout=embedded
+width=2)
+(image
+height=2
+layout=embedded
+width=8) (image
+width=2 height=10
+layout=surrounded) (image
+layout=surrounded width=4
+height=1)
+(image
+layout=embedded
+height=2
+width=11)
+(image
+layout=surrounded
+height=6 width=5) (image layout=embedded height=2 width=17)
+237 c
+(image
+height=2
+width=2 layout=embedded) (image
+layout=surrounded width=4 height=5)
+(image
+layout=embedded width=14
+height=2) (image
+height=10 width=3
+layout=surrounded)
+"""
+                       )
+    f = io.StringIO()
+    with redirect_stdout(f):
+        test()
+    s = f.getvalue()
+    assert s == """0 0
+72 0
+82 0
+84 0
+85 0
+86 0
+0 3
+18 3
+22 3
+26 3
+31 3
+42 3
+50 3
+52 3
+56 3
+67 3
+0 6
+0 12
+2 12
+6 12
+20 12
+"""

@@ -17,7 +17,7 @@ def place_images(w, h, c, document):
             if image["y"]+image["height"] <= y:
                 image_list.pop(i)
                 continue
-            if x <= image["x"] and y > image["y"] and y <= image["y"]+image["height"]:
+            if x < image["x"] and y > image["y"] and y <= image["y"]+image["height"]:
                 result = image["x"]-x
                 if result < min:
                     min = result
