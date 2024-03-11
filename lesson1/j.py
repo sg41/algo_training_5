@@ -28,7 +28,6 @@ def place_images(w, h, c, document):
         current_height = fragment["height"]
         x = start_x
         y = start_y
-        n = 0
         if x >= w or (x == 0):
             y += current_height
             current_height = h
@@ -45,12 +44,10 @@ def place_images(w, h, c, document):
                     break
             if x >= w:
                 x = 0
-                n += 1
+                y += current_height
+                current_height = h
             else:
                 break
-
-        if n > 0:
-            y += (n)*h
 
         fragment = {"width": get_possible_width(x, y), "height": current_height,
                     "start_x": x,

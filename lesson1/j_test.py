@@ -233,8 +233,7 @@ layout=floating)
 #     with redirect_stdout(f):
 #         test()
 #     s = f.getvalue()
-#     assert s == """
-# """
+#     assert s == ""
 
 
 def test13():
@@ -352,4 +351,43 @@ def test4():
     assert s == """0 11
 20 22
 40 33
+"""
+
+
+def test6():
+    def test():
+        j.place_images(10, 3, 2,
+                       """image
+-a-
+dx (image layout=floating width=1 height=1 dx=0 dy=0) br
+dy (image layout=floating width=1 height=1 dx=0 dy=0)
+dx
+ca (image layout=floating width=1 height=1 dx=0 dy=0) ca
+c v f
+''a
+.mb
+q w e r t y u i o p a s d f g h j k l z x c v b n m
+Q W E R T Y U I O P A S D F G H J K L Z X C V B N M
+. , : ; ! ? - '
+(image layout=floating width=1 height=1 dx=0 dy=0)
+
+(image layout=floating width=1 height=1 dx=0 dy=0)
+(image layout=floating width=1 height=1 dx=0 dy=0)
+
+(image layout=floating width=1 height=1 dx=0 dy=0)
+(image layout=floating width=1 height=1 dx=0 dy=0)
+"""
+                       )
+    f = io.StringIO()
+    with redirect_stdout(f):
+        test()
+    s = f.getvalue()
+    assert s == """4 6
+4 9
+4 12
+6 81
+0 84
+1 84
+0 87
+1 87
 """
