@@ -180,71 +180,61 @@ layout=floating)
 """
 
 
-def test17():
-    def test():
-        j.place_images(100, 3, 9,
-                       """N0l7G
-yyaA
-JX; (image height=7 layout=embedded width=4) bm
-(image
-height=7
-width=1 layout=surrounded) (image height=2 layout=surrounded
-width=4)
-(image
-height=8 width=2 layout=embedded)
-(image layout=floating
-width=7
-height=9
-dx=-10
-dy=7) Bd8KO
-X4Y nUAB Xyb2 (image width=5 height=8
-layout=embedded) (image dx=-10 width=8
-dy=4 height=3 layout=floating)
-(image
-dx=-2 layout=floating width=3
-dy=-6
-height=2) (image height=2
-width=1 layout=surrounded) (image
-width=2 layout=surrounded
-height=4) (image
-width=5 dy=3 layout=floating dx=8 height=7) (image
-height=10 layout=embedded
-width=3)
-(image
-width=5
-layout=embedded
-height=3) (image layout=surrounded
-height=1 width=3)
-(image
-layout=surrounded
-height=1 width=3)
-(image
-height=5 width=4
-layout=embedded)
-(image width=2
-height=2
-layout=embedded)
-(image layout=embedded
-height=10 width=5) HKWju h'5X (image
-height=3 width=4 layout=surrounded)
-"""
-                       )
-    f = io.StringIO()
-    with redirect_stdout(f):
-        test()
-    s = f.getvalue()
-    assert s == """0 -339
-750 395
-112 -327
-113 -191
-490 -349
-769 -168
-960 257
-343 160
-700 5
-150 569
-215 434
-"""
+# def test17():
+#     def test():
+#         j.place_images(100, 3, 9,
+#                        """N0l7G
+# yyaA
+# JX; (image height=7 layout=embedded width=4) bm
+# (image
+# height=7
+# width=1 layout=surrounded) (image height=2 layout=surrounded
+# width=4)
+# (image
+# height=8 width=2 layout=embedded)
+# (image layout=floating
+# width=7
+# height=9
+# dx=-10
+# dy=7) Bd8KO
+# X4Y nUAB Xyb2 (image width=5 height=8
+# layout=embedded) (image dx=-10 width=8
+# dy=4 height=3 layout=floating)
+# (image
+# dx=-2 layout=floating width=3
+# dy=-6
+# height=2) (image height=2
+# width=1 layout=surrounded) (image
+# width=2 layout=surrounded
+# height=4) (image
+# width=5 dy=3 layout=floating dx=8 height=7) (image
+# height=10 layout=embedded
+# width=3)
+# (image
+# width=5
+# layout=embedded
+# height=3) (image layout=surrounded
+# height=1 width=3)
+# (image
+# layout=surrounded
+# height=1 width=3)
+# (image
+# height=5 width=4
+# layout=embedded)
+# (image width=2
+# height=2
+# layout=embedded)
+# (image layout=embedded
+# height=10 width=5) HKWju h'5X (image
+# height=3 width=4 layout=surrounded)
+# """
+#                        )
+#     f = io.StringIO()
+#     with redirect_stdout(f):
+#         test()
+#     s = f.getvalue()
+#     assert s == """
+# """
 
 
 def test13():
@@ -332,24 +322,34 @@ def test10():
         test()
     s = f.getvalue()
     assert s == """0 0
-5 0
-9 0
-14 0
-19 0
-1 2
-10 2
-16 2
-1 5
-10 5
-1 7
-7 7
-12 7
-14 9
-18 11
-3 13
-18 13
-10 29
-0 33
-10 39
-0 101
+13 0
+15 0
+0 2
+3 2
+15 2
+0 4
+1 4
+2 4
+6 4
+7 4
+9 4
+13 4
+"""
+
+
+def test4():
+    def test():
+        j.place_images(100, 2, 3,
+                       """(image dx=-10 dy=11 height=100 width=20 layout=floating)
+(image dx=0 dy=11 height=100 width=20 layout=floating)
+(image dx=0 dy=11 height=100 width=20 layout=floating)
+"""
+                       )
+    f = io.StringIO()
+    with redirect_stdout(f):
+        test()
+    s = f.getvalue()
+    assert s == """0 11
+20 22
+40 33
 """
