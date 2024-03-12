@@ -96,7 +96,8 @@ bool check_picture(std::vector<std::vector<int>>& field, int n, int m) {
     } else if ((w != 1 && h == 1) || (w == 1 && h != 1)) {
       field[corners[0].first][corners[0].second] = 3;
     } else {
-      for (int i = corners[0].first; i < n - 1; i++) {
+      for (int i = corners[0].first; i <= n && field[i][corners[0].second] == 2;
+           i++) {
         field[i][corners[0].second] = 3;
       }
     }

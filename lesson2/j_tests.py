@@ -46,17 +46,17 @@ ba""")
 ###
 ###
 ...
-""", answer="YES", value="""aaa
-bbb
+""", answer="YES", value="""baa
+baa
 ...""")
 
     run_test("""3 3
 ###
 ###
 ###
-""", answer="YES", value="""bbb
-aaa
-aaa""")
+""", answer="YES", value="""baa
+baa
+baa""")
 
     run_test("""3 3
 ###
@@ -65,3 +65,61 @@ aaa""")
 """, answer="YES", value="""aaa
 bb.
 ...""")
+
+    run_test("""3 3
+#..
+###
+#..
+""", answer="YES", value="""a..
+abb
+a..""")
+
+    run_test("""3 3
+..#
+###
+..#
+""", answer="YES", value="""..a
+bba
+..a""")
+
+    run_test("""3 3
+.#.
+...
+###
+""", answer="YES", value=""".a.
+...
+bbb""")
+
+    run_test("""3 3
+.#.
+.#.
+###
+""", answer="YES", value=""".a.
+.a.
+bbb""")
+
+    run_test("""3 3
+..#
+..#
+###
+""", answer="YES", value="""..a
+..a
+bba""")
+
+    run_test("""3 3
+###
+#.#
+###
+""", answer="NO")
+
+    run_test("""3 3
+#.#
+..#
+###
+""", answer="NO")
+
+    run_test("""3 3
+###
+###
+#.#
+""", answer="NO")
