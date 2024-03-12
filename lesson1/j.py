@@ -15,7 +15,6 @@ def place_images(w, h, c, document):
         min = w-x
         for i, image in enumerate(image_list):
             if image["y"]+image["height"] <= y:
-                image_list.pop(i)
                 continue
             if x < image["x"] and y > image["y"] and y <= image["y"]+image["height"]:
                 result = image["x"]-x
@@ -36,16 +35,10 @@ def place_images(w, h, c, document):
         while x < w:
             for i, image in enumerate(image_list):
                 if image["y"]+image["height"] <= y:
-                    image_list.pop(i)
                     continue
                 if (x >= image["x"] and x <= image["x"]+image["width"]) and (
                         y >= image["y"] and y < image["y"]+image["height"]):
                     x = image["x"]+image["width"]
-                    # width = get_possible_width(x, y)
-                    # if width > 0:
-                    #     break
-                    # else:
-                    #     x += 1
             if x >= w:
                 x = 0
                 y += current_height
