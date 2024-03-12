@@ -1,35 +1,32 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
-using namespace std;
 
-int calculateWinnings(int n, const vector<int>& sectors, int a, int b, int k) {
-  int maxWinnings = 0;
-  for (int initialVelocity = a; initialVelocity <= b; initialVelocity++) {
-    int currentSector = 0;
-    int currentVelocity = initialVelocity;
-    int winnings = 0;
-    while (true) {
-      if (currentVelocity <= k) {
-        break;
-      }
-      currentSector = (currentSector + currentVelocity) % n;
-      winnings = max(winnings, sectors[currentSector]);
-      currentVelocity -= k;
-    }
-    maxWinnings = max(maxWinnings, winnings);
+long long calculateWinnings(int n, const std::vector<long long>& sectors,
+                            long long a, long long b, long long k) {
+  long long max_winning = 0;
+  long long max_sectors_right = b / k + (b % k != 0);
+  long long max_finish_right = max_sectors_right % n;
+  long long min_sectors_right = a / k + (a % k != 0);
+  long long min_finish_right = min_sectors_right % n;
+  if (max_sectors_right - min_sectors_right >= n) {
+    max_winning = *std::max_element(sectors.begin(), sectors.end());
+  } else {
+    max_winning = *std::max_element(sectors.begin() + min_finish_right,
+                                    sectors.begin() + max_finish_right + 1);
   }
-  return maxWinnings;
+
+  return max_winning;
 }
 
 int main() {
-  int n, a, b, k;
-  cin >> n;
-  vector<int> sectors(n);
+  long long n, a, b, k;
+  std::cin >> n;
+  std::vector<long long> sectors(n);
   for (int i = 0; i < n; i++) {
-    cin >> sectors[i];
+    std::cin >> sectors[i];
   }
-  cin >> a >> b >> k;
-  cout << calculateWinnings(n, sectors, a, b, k) << endl;
+  std::cin >> a >> b >> k;
+  std::cout << calculateWinnings(n, sectors, a, b, k) << std::endl;
   return 0;
 }
