@@ -3,25 +3,19 @@ import subprocess
 
 def run_test(data, **kwargs):
     test = subprocess.Popen(
-        "./a.out",  stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        ["./a.out"],  stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     (out, err) = test.communicate(input=data)
     if kwargs.get("comment") != None:
         print(kwargs.get("comment"))
     # print(data)
-    # print(out)
+    print(out)
+    if test.returncode != 0:
+        print("RE", err)
+        return
     res = list(out.split("\n"))
-    if kwargs.get("answer") != None and len(res) > 0:
+    if kwargs.get("answer") != None and len(res) > 1:
         if int(res[-2]) != kwargs.get("answer"):
             print(f"WRONG ANSWER: {res[-2]} != {kwargs.get('answer')}")
-    #         return
-    # elif len(res) == 0:
-    #     print(data)
-    #     print(err)
-    #     print("NO ANSWER")
-    # if kwargs.get("value") != None and len(res) > 1:
-    #     if "\n".join(res[1:-1]) != kwargs.get("value"):
-    #         print(
-    #             f"WRONG VALUE: {res[1:]} != {kwargs.get('value')}")
 
 
 result = subprocess.run(["g++", "-std=c++20", "-g", "i.cpp"])
@@ -205,3 +199,58 @@ if result.returncode == 0:
 10 10
 13 42
 """, answer=688, comment="test32")
+
+# 40
+    run_test("""51
+45 26
+4 37
+2 18
+28 27
+51 7
+30 14
+20 34
+45 42
+30 3
+22 12
+25 32
+2 15
+13 13
+39 18
+47 11
+45 36
+13 39
+4 26
+5 19
+19 18
+42 33
+39 44
+42 45
+38 42
+11 21
+13 8
+19 15
+20 30
+19 6
+5 42
+29 42
+11 11
+36 10
+33 46
+46 16
+37 48
+33 2
+49 19
+47 3
+25 1
+23 5
+13 35
+2 10
+6 33
+17 4
+39 1
+13 9
+7 48
+38 35
+24 21
+33 29
+""", answer=690, comment="test40")
