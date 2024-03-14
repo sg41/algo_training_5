@@ -5,37 +5,61 @@
 int move_ships(std::vector<std::vector<int>> field,
                std::vector<std::pair<int, int>> ships, int column) {
   int moves = 0;
-  // for( int)
-  for (int i = 1; i < field.size(); i++) {
-    if (field[i][column] == 1) {
+
+  for (int s = 0; s < ships.size(); s++) {
+    if (ships[s].second == column) {
+      std::swap(ships[s], ships[ships.size() - 1]);
+      ships.pop_back();
+    }
+  }
+  for (int r = 1; r < field.size(); r++) {
+    if (field[r][column] == 1) {
       continue;
     }
-    std::sort(ships.begin(), ships.end(),
-              [i, column](const std::pair<int, int>& a,
-                          const std::pair<int, int>& b) {
-                bool res = false;
-                int patha = std::abs(a.first - i) + std::abs(a.second - column);
-                int pathb = std::abs(b.first - i) + std::abs(b.second - column);
-                if (patha > pathb) {
-                  res = true;
-                } else if (patha == pathb) {
-                  if (b.first == i) res = true;
-                }
-                return res;
-              });
-    for (int s = ships.size() - 1; s >= 0; s--) {
-      if (ships[s].second == column) {
-        ships.pop_back();
-        continue;
-      } else {
-        moves +=
-            std::abs(ships[s].first - i) + std::abs(ships[s].second - column);
-        ships.pop_back();
-        break;
+    int h_moves = 101;
+    int best_index = -1;
+    for (int s = 0; s < ships.size(); s++) {
+      if (ships[s].first == r && ships[s].second != column) {
+        if (std::abs(ships[s].second - column) < h_moves) {
+          h_moves = std::abs(ships[s].second - column);
+          best_index = s;
+        };
       }
     }
-    field[i][column] = 1;
+    if (best_index != -1) {
+      std::swap(ships[best_index], ships[ships.size() - 1]);
+      ships.pop_back();
+      moves += h_moves;
+      field[r][column] = 1;
+    }
   }
+  // for (int r = 1; r < field.size(); r++) {
+  //   if (field[r][column] == 1) {
+  //     continue;
+  //   }
+
+  // std::sort(ships.begin(), ships.end(),
+  //           [r, column](const std::pair<int, int>& a,
+  //                       const std::pair<int, int>& b) {
+  //             bool res = false;
+  //             if (a.first >= b.first) {
+  //               res = true;
+  //             }
+  //             return res;
+  //           });
+  // for (int s = ships.size() - 1; s >= 0; s--) {
+  //   if (ships[s].second == column) {
+  //     ships.pop_back();
+  //     continue;
+  //   } else {
+  //     moves +=
+  //         std::abs(ships[s].first - r) + std::abs(ships[s].second - column);
+  //     ships.pop_back();
+  //     break;
+  //   }
+  // }
+  // field[r][column] = 1;
+  // }
   return moves;
 }
 

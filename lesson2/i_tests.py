@@ -5,8 +5,10 @@ def run_test(data, **kwargs):
     test = subprocess.Popen(
         "./a.out",  stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     (out, err) = test.communicate(input=data)
-    print(data)
-    print(out)
+    if kwargs.get("comment") != None:
+        print(kwargs.get("comment"))
+    # print(data)
+    # print(out)
     res = list(out.split("\n"))
     if kwargs.get("answer") != None and len(res) > 0:
         if int(res[-2]) != kwargs.get("answer"):
@@ -28,38 +30,38 @@ if result.returncode == 0:
 1 2
 3 3
 1 1
-""", answer=3)
+""", answer=3, comment="test1")
 
     run_test("""3
 2 1
 2 2
 2 3
-""", answer=4)
+""", answer=4, comment="test2")
 
     run_test("""3
 1 1
 2 2
 3 3
-""", answer=2)
+""", answer=2, comment="test3")
 
     run_test("""3
 1 2
 2 2
 3 2
-""", answer=0)
+""", answer=0, comment="test4")
 
     run_test("""3
 1 1
 1 2
 1 3
-""", answer=5)
+""", answer=5, comment="test5")
 
     run_test("""4
 1 1
 1 2
 2 1
 2 2
-""", answer=6)
+""", answer=6, comment="test6")
 
 # 9
     run_test("""5
@@ -68,7 +70,7 @@ if result.returncode == 0:
 3 3
 4 4
 5 5
-""", answer=6)
+""", answer=6, comment="test9")
 
     run_test("""10
 1 6
@@ -81,7 +83,7 @@ if result.returncode == 0:
 10 8
 8 7
 7 8
-""", answer=30)  # !dont know right answer
+""", answer=30, comment="test10, dont know right answer")  # !dont know right answer
 
 # 13
     run_test("""10
@@ -95,7 +97,7 @@ if result.returncode == 0:
 8 10
 3 9
 6 2
-""", answer=6)  # ! dont know right answer
+""", answer=6, comment="test13, dont know right answer")  # ! dont know right answer
 
 # 15
     run_test("""10
@@ -109,7 +111,7 @@ if result.returncode == 0:
 8 5
 1 9
 4 5
-""", answer=23)
+""", answer=23, comment="test15")
 
 # 16
     run_test("""10
@@ -123,7 +125,7 @@ if result.returncode == 0:
 10 8
 8 7
 7 8
-""", answer=35)
+""", answer=35, comment="test16")
 
 # 23
     run_test("""20
@@ -147,7 +149,7 @@ if result.returncode == 0:
 18 11
 4 14
 16 4
-""", answer=108)
+""", answer=108, comment="test23")
 
 # 32
     run_test("""51
@@ -202,4 +204,4 @@ if result.returncode == 0:
 4 21
 10 10
 13 42
-""", answer=688)
+""", answer=688, comment="test32")
