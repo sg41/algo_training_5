@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <set>
 #include <string>
@@ -26,13 +27,9 @@ int main(void) {
       break;
     }
   }
-  if (result.size() == 0) {
-    std::cout << "NO" << std::endl;
-  } else {
-    std::cout << "YES" << std::endl;
-    for (auto song : result) {
-      std::cout << song << " ";
-    }
+  std::cout << result.size() << std::endl;
+  for (auto song : result) {
+    std::cout << song << " ";
   }
   return 0;
 }
