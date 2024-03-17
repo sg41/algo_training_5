@@ -47,6 +47,11 @@ bool check_triangle(const std::vector<std::pair<long, long>> &points,
   return false;
 }
 
+bool check_triangle(std::pair<long, long> p1, std::pair<long, long> p2,
+                    std::pair<long, long> p3) {
+  return check_triangle({p1, p2, p3}, 0);
+}
+
 std::vector<std::pair<long, long>> get_quadrangle(
     const std::vector<std::pair<long, long>> &points, int start,
     int have_points = 1) {
@@ -69,26 +74,59 @@ std::vector<std::pair<long, long>> get_quadrangle(
     long y2 = points[start + 1].second;
     long x3 = points[start + 2].first;
     long y3 = points[start + 2].second;
-    // long v12 = (x1 - x2) * (y1 - y2);
-    // long v13 = (x1 - x3) * (y1 - y3);
-    // long v23 = (x2 - x3) * (y2 - y3);
     long x4, y4;
 
-    // if (v12 == -v13) {
-    //   x4 = x2 + x3 - x1;
-    //   y4 = y2 + y3 - y1;
-    // } else if (v12 == -v23) {
-    //   x4 = x1 + x3 - x2;
-    //   y4 = y1 + y3 - y2;
-    // } else {
-    //   x4 = x1 + x2 - x3;
-    //   y4 = y1 + y2 - y3;
+    // long v12x = x1 - x2;
+    // long v12y = y1 - y2;
+    // long v13x = x1 - x3;
+    // long v13y = y1 - y3;
+    // long v23x = x2 - x3;
+    // long v23y = y2 - y3;
+    // if (v12x * v12x + v12y * v12y == v13x * v13x + v13y * v13y &&
+    //     2 * (v13x * v13x + v13y * v13y) == v23x * v23x + v23y * v23y) {
+    //   long v14x = v23y;
+    //   long v14y = -v23x;
+    //   x4 = x1 + v14x;
+    //   y4 = y1 + v14y;
+    // } else if (v12x * v12x + v12y * v12y == v23x * v23x + v23y * v23y &&
+    //            2 * (v23x * v23x + v23y * v23y) == v13x * v13x + v13y * v13y)
+    //            {
+    //   long v24x = v13y;
+    //   long v24y = -v13x;
+    //   x4 = x1 + v24x;
+    //   y4 = y1 + v24y;
+    // } else if (v13x * v13x + v13y * v13y == v23x * v23x + v23y * v23y &&
+    //            2 * (v23x * v23x + v23y * v23y) == v12x * v12x + v12y * v12y)
+    //            {
+    //   long v34x = v12y;
+    //   long v34y = -v12x;
+    //   x4 = x1 + v34x;
+    //   y4 = y1 + v34y;
     // }
+    long v12 = (x1 - x2) * (y1 - y2);
+    long v13 = (x1 - x3) * (y1 - y3);
+    long v23 = (x2 - x3) * (y2 - y3);
+
+    if (v12 == -v13) {
+      x4 = x2 + x3 - x1;
+      y4 = y2 + y3 - y1;
+    } else if (v12 == -v23) {
+      x4 = x1 + x3 - x2;
+      y4 = y1 + y3 - y2;
+    } else {
+      x4 = x1 + x2 - x3;
+      y4 = y1 + y2 - y3;
+    }
     result[0] = {x4, y4};
   }
   return result;
 }
 
+std::vector<std::pair<long, long>> get_quadrangle(std::pair<long, long> p1,
+                                                  std::pair<long, long> p2,
+                                                  std::pair<long, long> p3) {
+  return get_quadrangle({p1, p2, p3}, 0, 1);
+}
 int main(void) {
   int n;
   std::cin >> n;
@@ -105,10 +143,6 @@ int main(void) {
       result = get_quadrangle(points, 0, 1);
     } else if (n == 2) {
       result = get_quadrangle(points, 0, 2);
-      //   assert(check_quadrangle(points[0].first, points[0].second,
-      //                           points[1].first, points[1].second,
-      //                           result[0].first, result[0].second,
-      //                           result[1].first, result[1].second) == true);
     } else if (n == 3) {
       if (check_triangle(points, 0)) {
         result = get_quadrangle(points, 0, 3);
@@ -118,13 +152,20 @@ int main(void) {
     }
     found = true;
   } else {
-    for (int i = 0; i < n - 2; i++) {
-      if (check_triangle(points, i)) {
-        found = true;
-        result = get_quadrangle(points, i, 3);
-        if (points_set.find(result[0]) != points_set.end()) {
-          result.clear();
-          break;
+    for (auto p1 : points) {
+      for (auto p2 : points) {
+        for (auto p3 : points) {
+          if (p1 == p2 || p1 == p3 || p2 == p3) {
+            continue;
+          }
+          if (check_triangle(p1, p2, p3)) {
+            found = true;
+            result = get_quadrangle(p1, p2, p3);
+            if (points_set.find(result[0]) != points_set.end()) {
+              result.clear();
+              break;
+            }
+          }
         }
       }
     }
