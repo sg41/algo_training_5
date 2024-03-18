@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <iostream>
 #include <map>
-#include <unordered_set>
+#include <set>
 #include <vector>
 bool check_quadrangle(long x1, long y1, long x2, long y2, long x3, long y3,
                       long x4, long y4) {
@@ -147,7 +147,7 @@ std::vector<std::pair<long, long>> get_quadrangle(std::pair<long, long> p1,
                                                   std::pair<long, long> p3) {
   return get_quadrangle({p1, p2, p3}, 0, 1);
 }
-bool check_exists(const std::unordered_set<std::pair<long, long>> &points_set,
+bool check_exists(const std::set<std::pair<long, long>> &points_set,
                   const std::vector<std::pair<long, long>> &points) {
   return (points_set.find(points[0]) != points_set.end() &&
           points_set.find(points[1]) != points_set.end());
@@ -156,7 +156,7 @@ int main(void) {
   int n;
   std::cin >> n;
   std::vector<std::pair<long, long>> points(n);
-  std::unordered_set<std::pair<long, long>> points_set(n);
+  std::set<std::pair<long, long>> points_set;
   for (int i = 0; i < n; i++) {
     std::cin >> points[i].first >> points[i].second;
     points_set.insert(points[i]);
