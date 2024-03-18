@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <iostream>
 #include <map>
-#include <set>
+#include <unordered_set>
 #include <vector>
 bool check_quadrangle(long x1, long y1, long x2, long y2, long x3, long y3,
                       long x4, long y4) {
@@ -124,19 +124,45 @@ std::vector<std::pair<long, long>> get_quadrangle(
 
 std::vector<std::pair<long, long>> get_quadrangle(std::pair<long, long> p1,
                                                   std::pair<long, long> p2,
+                                                  int direction = 1) {
+  std::vector<std::pair<long, long>> result(2);
+  long v12x = p2.first - p1.first;
+  long v12y = p2.second - p1.second;
+  long v13x;
+  long v13y;
+  if (direction == 1) {  // clockwise
+    v13x = v12y;
+    v13y = -v12x;
+  } else {  // counterclockwise
+    v13x = -v12y;
+    v13y = v12x;
+  }
+  result[0] = {p1.first + v13x, p1.second + v13y};
+  result[1] = {result[0].first + v12x, result[0].second + v12y};
+  return result;
+}
+
+std::vector<std::pair<long, long>> get_quadrangle(std::pair<long, long> p1,
+                                                  std::pair<long, long> p2,
                                                   std::pair<long, long> p3) {
   return get_quadrangle({p1, p2, p3}, 0, 1);
+}
+bool check_exists(const std::unordered_set<std::pair<long, long>> &points_set,
+                  const std::vector<std::pair<long, long>> &points) {
+  return (points_set.find(points[0]) != points_set.end() &&
+          points_set.find(points[1]) != points_set.end());
 }
 int main(void) {
   int n;
   std::cin >> n;
   std::vector<std::pair<long, long>> points(n);
-  std::set<std::pair<long, long>> points_set;
+  std::unordered_set<std::pair<long, long>> points_set(n);
   for (int i = 0; i < n; i++) {
     std::cin >> points[i].first >> points[i].second;
     points_set.insert(points[i]);
   }
   bool found = false;
+  bool found_triangle = false;
   std::vector<std::pair<long, long>> result;
   if (n < 4) {
     if (n == 1) {
@@ -154,22 +180,35 @@ int main(void) {
   } else {
     for (auto p1 : points) {
       for (auto p2 : points) {
-        for (auto p3 : points) {
-          if (p1 == p2 || p1 == p3 || p2 == p3) {
-            continue;
-          }
-          if (check_triangle(p1, p2, p3)) {
+        if (p1 == p2) {
+          continue;
+        }
+        std::vector<std::pair<long, long>> current_result[2];
+        current_result[0] = get_quadrangle(p1, p2, 1);
+        current_result[1] = get_quadrangle(p1, p2, -1);
+        for (auto cr : current_result) {
+          if (check_exists(points_set, cr)) {
+            result.clear();
             found = true;
-            result = get_quadrangle(p1, p2, p3);
-            if (points_set.find(result[0]) != points_set.end()) {
-              result.clear();
-              break;
-            }
+            break;
+          } else if (points_set.find(cr[0]) != points_set.end()) {
+            result = {cr[1]};
+            found_triangle = true;
+          } else if (points_set.find(cr[1]) != points_set.end()) {
+            result = {cr[0]};
+            found_triangle = true;
           }
         }
+        if (found) {
+          break;
+        }
+      }
+      if (found) {
+        break;
       }
     }
-    if (found == false) {
+
+    if (found == false && found_triangle == false) {
       result = get_quadrangle(points, 0, 2);
     }
   }
