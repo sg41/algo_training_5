@@ -4,7 +4,20 @@
 #include <iostream>
 #include <map>
 #include <set>
+#include <unordered_set>
 #include <vector>
+
+namespace std {
+template <>
+class hash<std::pair<long, long>> {
+ public:
+  size_t operator()(const std::pair<long, long>& s) const {
+    size_t h1 = std::hash<long>()(s.first);
+    size_t h2 = std::hash<long>()(s.second);
+    return h1 + h2;  // h1 ^ (h2 << 1);
+  }
+};
+}  // namespace std
 bool check_quadrangle(long x1, long y1, long x2, long y2, long x3, long y3,
                       long x4, long y4) {
   long s1 = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
@@ -17,7 +30,7 @@ bool check_quadrangle(long x1, long y1, long x2, long y2, long x3, long y3,
          ((s1 == s2 && s5 == s6 && s1 == s5) && (s3 == s4 && s3 == 2 * s1)) ||
          ((s1 == s6 && s1 == 2 * s2) && (s2 == s5 && s3 == s4 && s2 == s3));
 }
-int find_start_point(const std::vector<std::pair<long, long>> &points,
+int find_start_point(const std::vector<std::pair<long, long>>& points,
                      int start) {
   int result = -1;
   long x1 = points[start].first;
@@ -39,7 +52,7 @@ int find_start_point(const std::vector<std::pair<long, long>> &points,
   return result;
 }
 
-bool check_triangle(const std::vector<std::pair<long, long>> &points,
+bool check_triangle(const std::vector<std::pair<long, long>>& points,
                     int start) {
   if (find_start_point(points, start) != -1) {
     return true;
@@ -47,13 +60,14 @@ bool check_triangle(const std::vector<std::pair<long, long>> &points,
   return false;
 }
 
-bool check_triangle(std::pair<long, long> p1, std::pair<long, long> p2,
-                    std::pair<long, long> p3) {
+bool check_triangle(const std::pair<long, long>& p1,
+                    const std::pair<long, long>& p2,
+                    const std::pair<long, long>& p3) {
   return check_triangle({p1, p2, p3}, 0);
 }
 
 std::vector<std::pair<long, long>> get_quadrangle(
-    const std::vector<std::pair<long, long>> &points, int start,
+    const std::vector<std::pair<long, long>>& points, int start,
     int have_points = 1) {
   std::vector<std::pair<long, long>> result(4 - have_points);
   if (have_points == 1) {
@@ -76,33 +90,6 @@ std::vector<std::pair<long, long>> get_quadrangle(
     long y3 = points[start + 2].second;
     long x4, y4;
 
-    // long v12x = x1 - x2;
-    // long v12y = y1 - y2;
-    // long v13x = x1 - x3;
-    // long v13y = y1 - y3;
-    // long v23x = x2 - x3;
-    // long v23y = y2 - y3;
-    // if (v12x * v12x + v12y * v12y == v13x * v13x + v13y * v13y &&
-    //     2 * (v13x * v13x + v13y * v13y) == v23x * v23x + v23y * v23y) {
-    //   long v14x = v23y;
-    //   long v14y = -v23x;
-    //   x4 = x1 + v14x;
-    //   y4 = y1 + v14y;
-    // } else if (v12x * v12x + v12y * v12y == v23x * v23x + v23y * v23y &&
-    //            2 * (v23x * v23x + v23y * v23y) == v13x * v13x + v13y * v13y)
-    //            {
-    //   long v24x = v13y;
-    //   long v24y = -v13x;
-    //   x4 = x1 + v24x;
-    //   y4 = y1 + v24y;
-    // } else if (v13x * v13x + v13y * v13y == v23x * v23x + v23y * v23y &&
-    //            2 * (v23x * v23x + v23y * v23y) == v12x * v12x + v12y * v12y)
-    //            {
-    //   long v34x = v12y;
-    //   long v34y = -v12x;
-    //   x4 = x1 + v34x;
-    //   y4 = y1 + v34y;
-    // }
     long v12 = (x1 - x2) * (y1 - y2);
     long v13 = (x1 - x3) * (y1 - y3);
     long v23 = (x2 - x3) * (y2 - y3);
@@ -122,9 +109,9 @@ std::vector<std::pair<long, long>> get_quadrangle(
   return result;
 }
 
-std::vector<std::pair<long, long>> get_quadrangle(std::pair<long, long> p1,
-                                                  std::pair<long, long> p2,
-                                                  int direction = 1) {
+std::vector<std::pair<long, long>> get_quadrangle(
+    const std::pair<long, long>& p1, const std::pair<long, long>& p2,
+    int direction = 1) {
   std::vector<std::pair<long, long>> result(2);
   long v12x = p2.first - p1.first;
   long v12y = p2.second - p1.second;
@@ -142,13 +129,13 @@ std::vector<std::pair<long, long>> get_quadrangle(std::pair<long, long> p1,
   return result;
 }
 
-std::vector<std::pair<long, long>> get_quadrangle(std::pair<long, long> p1,
-                                                  std::pair<long, long> p2,
-                                                  std::pair<long, long> p3) {
+std::vector<std::pair<long, long>> get_quadrangle(
+    const std::pair<long, long>& p1, const std::pair<long, long>& p2,
+    const std::pair<long, long>& p3) {
   return get_quadrangle({p1, p2, p3}, 0, 1);
 }
-bool check_exists(const std::set<std::pair<long, long>> &points_set,
-                  const std::vector<std::pair<long, long>> &points) {
+bool check_exists(const std::unordered_set<std::pair<long, long>>& points_set,
+                  const std::vector<std::pair<long, long>>& points) {
   return (points_set.find(points[0]) != points_set.end() &&
           points_set.find(points[1]) != points_set.end());
 }
@@ -156,7 +143,7 @@ int main(void) {
   int n;
   std::cin >> n;
   std::vector<std::pair<long, long>> points(n);
-  std::set<std::pair<long, long>> points_set;
+  std::unordered_set<std::pair<long, long>> points_set(n);
   for (int i = 0; i < n; i++) {
     std::cin >> points[i].first >> points[i].second;
     points_set.insert(points[i]);
@@ -178,14 +165,11 @@ int main(void) {
     }
     found = true;
   } else {
-    for (auto p1 : points) {
-      for (auto p2 : points) {
-        if (p1 == p2) {
-          continue;
-        }
+    for (auto p1 = points.begin(); p1 != points.end(); ++p1) {
+      for (auto p2 = p1 + 1; p2 != points.end(); ++p2) {
         std::vector<std::pair<long, long>> current_result[2];
-        current_result[0] = get_quadrangle(p1, p2, 1);
-        current_result[1] = get_quadrangle(p1, p2, -1);
+        current_result[0] = get_quadrangle(*p1, *p2, 1);
+        current_result[1] = get_quadrangle(*p1, *p2, -1);
         for (auto cr : current_result) {
           if (check_exists(points_set, cr)) {
             result.clear();
