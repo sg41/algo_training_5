@@ -38,7 +38,7 @@ class hash<std::pair<int, int>> {
 int move_picture(
     const std::vector<std::pair<Coord, Coord>>& a_coord,
     const std::vector<std::pair<Coord, Coord>>& b_coord, int i,
-    const std::unordered_multiset<std::pair<Coord, Coord>>& b_set_coord) {
+    const std::unordered_set<std::pair<Coord, Coord>>& b_set_coord) {
   int count = 0;
   int dx = b_coord[i].first.first - a_coord[i].first.first;
   int dy = b_coord[i].first.second - a_coord[i].first.second;
@@ -60,10 +60,10 @@ int main(void) {
   std::vector<stick> a(n), b(n);
   std::vector<std::pair<Coord, Coord>> a_coord(n);
   std::vector<std::pair<Coord, Coord>> b_coord(n);
-  std::unordered_multiset<std::pair<Coord, Coord>> b_set_coord(n);
+  std::unordered_set<std::pair<Coord, Coord>> b_set_coord(n);
   std::vector<std::pair<int, int>> a_vector(n);
   std::vector<std::pair<int, int>> b_vector(n);
-  std::unordered_multiset<std::pair<int, int>> a_set_vector(n);
+  std::unordered_set<std::pair<int, int>> a_set_vector(n);
   std::unordered_set<std::pair<int, int>> used_point(n);
 
   for (int i = 0; i < n; i++) {
