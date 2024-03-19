@@ -1,5 +1,6 @@
 import subprocess
 import argparse
+import timeit
 
 
 def run_test(data, **kwargs):
@@ -1308,7 +1309,7 @@ if result.returncode == 0:
 """, answer=175, comment="test10")
 
     # test 12
-    run_test("""1000
+    print(timeit.timeit('''run_test("""1000
 2811 -2652 2806 -2652
 -4614 4913 -4611 4917
 3493 4605 3496 4609
@@ -3309,7 +3310,7 @@ if result.returncode == 0:
 -4356 -3065 -4353 -3069
 -4224 3778 -4220 3781
 227 -4717 224 -4713
-""", answer=999, comment="test12")
+""", answer=999, comment="test12")''', number=1, setup="from __main__ import run_test"))
 
     # test17
     run_test("""1000

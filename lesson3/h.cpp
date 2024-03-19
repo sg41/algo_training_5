@@ -64,7 +64,8 @@ int main(void) {
   std::vector<std::pair<int, int>> a_vector(n);
   std::vector<std::pair<int, int>> b_vector(n);
   std::unordered_multiset<std::pair<int, int>> a_set_vector(n);
-  int start_x_a = 0, start_y_a = 0;
+  std::unordered_set<std::pair<int, int>> used_point(n);
+
   for (int i = 0; i < n; i++) {
     std::cin >> a[i].x1 >> a[i].y1 >> a[i].x2 >> a[i].y2;
     if(a[i].x1 > a[i].x2){
@@ -79,7 +80,7 @@ int main(void) {
         std::make_pair(std::make_pair(a[i].x1, a[i].y1), a_vector[i])};
     a_set_vector.insert(a_vector[i]);
   }
-  int start_x_b, start_y_b;
+
   for (int i = 0; i < n; i++) {
     std::cin >> b[i].x1 >> b[i].y1 >> b[i].x2 >> b[i].y2;
     if(b[i].x1 > b[i].x2){
