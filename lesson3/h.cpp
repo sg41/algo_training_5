@@ -21,69 +21,73 @@ class hash<std::pair<Coord, Coord>> {
     size_t h2 = std::hash<int>()(s.first.second);
     size_t h3 = std::hash<int>()(s.second.first);
     size_t h4 = std::hash<int>()(s.second.second);
-    return h1 * 100000 + h2 * 10000 + h3 * 1000 + h4;
+    return h1 + h2 + h3 + h4;
+  }
+};
+template <>
+class hash<std::pair<int, int>> {
+ public:
+  size_t operator()(const std::pair<int, int>& s) const {
+    size_t h1 = std::hash<int>()(s.first);
+    size_t h2 = std::hash<int>()(s.second);
+    return h1 + h2;
   }
 };
 }  // namespace std
 
+int move_picture(
+    const std::vector<std::pair<Coord, Coord>>& a_coord,
+    const std::vector<std::pair<Coord, Coord>>& b_coord, int i,
+    const std::unordered_multiset<std::pair<Coord, Coord>>& b_set_coord) {
+  int count = 0;
+  int dx = b_coord[i].first.first - a_coord[i].first.first;
+  int dy = b_coord[i].first.second - a_coord[i].first.second;
+  std::vector<std::pair<Coord, Coord>> a_coord_new(a_coord.size());
+  for (int j = 0; j < a_coord.size(); j++) {
+    // if (j == i) continue;
+    a_coord_new[j] = a_coord[j];
+    a_coord_new[j].first.first += dx;
+    a_coord_new[j].first.second += dy;
+    if (std::find(b_set_coord.begin(), b_set_coord.end(), a_coord_new[j]) !=
+        b_set_coord.end()) {
+      count++;
+    }
+  }
+  return count;
+}
 int main(void) {
   int n;
   std::cin >> n;
   std::vector<stick> a(n), b(n);
-  std::vector<std::pair<Coord, Coord>> a_vector_set(n);
-  std::vector<std::pair<Coord, Coord>> a_vector_set_reverse(n);
-  std::vector<std::pair<Coord, Coord>> b_vector_set(n);
-  std::unordered_multiset<std::pair<Coord, Coord>> b_set(n);
+  std::vector<std::pair<Coord, Coord>> a_coord(n);
+  std::vector<std::pair<Coord, Coord>> b_coord(n);
+  std::unordered_multiset<std::pair<Coord, Coord>> b_set_coord(n);
+  std::vector<std::pair<int, int>> a_vector(n);
+  std::vector<std::pair<int, int>> b_vector(n);
+  std::unordered_multiset<std::pair<int, int>> b_set_vector(n);
   int start_x_a = 0, start_y_a = 0;
   for (int i = 0; i < n; i++) {
     std::cin >> a[i].x1 >> a[i].y1 >> a[i].x2 >> a[i].y2;
-    if (i == 0) {
-      start_x_a = std::min(a[i].x1, a[i].x2);
-      start_y_a = std::min(a[i].y1, a[i].y2);
-    } else {
-      start_x_a = std::min(start_x_a, std::min(a[i].x1, a[i].x2));
-      start_y_a = std::min(start_y_a, std::min(a[i].y1, a[i].y2));
-    }
-    a_vector_set[i] = {
-        std::make_pair(std::make_pair(a[i].x1, a[i].y1),
-                       std::make_pair(a[i].x2 - a[i].x1, a[i].y2 - a[i].y1))};
-    a_vector_set_reverse[i] = {
-        std::make_pair(std::make_pair(a[i].x2, a[i].y2),
-                       std::make_pair(a[i].x1 - a[i].x2, a[i].y1 - a[i].y2))};
+    a_vector[i] = {std::make_pair(a[i].x2 - a[i].x1, a[i].y2 - a[i].y1)};
+    a_coord[i] = {
+        std::make_pair(std::make_pair(a[i].x1, a[i].y1), a_vector[i])};
   }
   int start_x_b, start_y_b;
   for (int i = 0; i < n; i++) {
     std::cin >> b[i].x1 >> b[i].y1 >> b[i].x2 >> b[i].y2;
-    if (i == 0) {
-      start_x_b = std::min(b[i].x1, b[i].x2);
-      start_y_b = std::min(b[i].y1, b[i].y2);
-    } else {
-      start_x_b = std::min(start_x_b, std::min(b[i].x1, b[i].x2));
-      start_y_b = std::min(start_y_b, std::min(b[i].y1, b[i].y2));
-    }
-    b_vector_set[i] = {
-        std::make_pair(std::make_pair(b[i].x1, b[i].y1),
-                       std::make_pair(b[i].x2 - b[i].x1, b[i].y2 - b[i].y1))};
-  }
-
-  for (int i = 0; i < n; i++) {
-    a_vector_set[i].first.first += -start_x_a + start_x_b;
-    a_vector_set[i].first.second += -start_y_a + start_y_b;
-    a_vector_set_reverse[i].first.first += -start_x_a + start_x_b;
-    a_vector_set_reverse[i].first.second += -start_y_a + start_y_b;
-    // b_vector_set[i].first.first += start_x_a;
-    // b_vector_set[i].second += start_y_a;
-    b_set.insert(b_vector_set[i]);
+    b_vector[i] = {std::make_pair(b[i].x2 - b[i].x1, b[i].y2 - b[i].y1)};
+    b_coord[i] = {
+        std::make_pair(std::make_pair(b[i].x1, b[i].y1), b_vector[i])};
+    b_set_coord.insert(b_coord[i]);
+    b_set_vector.insert(b_vector[i]);
   }
 
   int done_count = 0;
   for (int i = 0; i < n; i++) {
-    if (std::find(b_set.begin(), b_set.end(), a_vector_set[i]) != b_set.end()) {
-      done_count++;
-    }
-    if (std::find(b_set.begin(), b_set.end(), a_vector_set_reverse[i]) !=
-        b_set.end()) {
-      done_count++;
+    if (std::find(b_set_vector.begin(), b_set_vector.end(), a_vector[i]) !=
+        b_set_vector.end()) {
+      done_count =
+          std::max(done_count, move_picture(a_coord, b_coord, i, b_set_coord));
     }
   }
 
