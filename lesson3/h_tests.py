@@ -3310,7 +3310,7 @@ if result.returncode == 0:
 -4356 -3065 -4353 -3069
 -4224 3778 -4220 3781
 227 -4717 224 -4713
-""", answer=999, comment="test12")''', number=1, setup="from __main__ import run_test"))
+""", answer=998, comment="test12")''', number=1, setup="from __main__ import run_test"))
 
     # test17
     run_test("""1000

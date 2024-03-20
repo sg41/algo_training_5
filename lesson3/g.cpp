@@ -136,8 +136,7 @@ std::vector<std::pair<long, long>> get_quadrangle(
 }
 bool check_exists(const std::unordered_set<std::pair<long, long>>& points_set,
                   const std::vector<std::pair<long, long>>& points) {
-  return (points_set.find(points[0]) != points_set.end() &&
-          points_set.find(points[1]) != points_set.end());
+  return (points_set.contains(points[0]) && points_set.contains(points[1]));
 }
 int main(void) {
   int n;
