@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <iostream>
+#include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
@@ -66,6 +67,7 @@ int main(void) {
   std::unordered_set<std::pair<int, int>> a_set_vector(n);
   std::unordered_set<std::pair<int, int>> used_point(n);
   std::unordered_map<std::pair<int, int>, std::vector<int>> a_map_vector(n);
+  std::unordered_map<std::pair<int, int>, std::vector<int>> b_map_vector(n);
 
   for (int i = 0; i < n; i++) {
     std::cin >> a[i].x1 >> a[i].y1 >> a[i].x2 >> a[i].y2;
@@ -96,16 +98,17 @@ int main(void) {
     b_coord[i] = {
         std::make_pair(std::make_pair(b[i].x1, b[i].y1), b_vector[i])};
     b_set_coord.insert(b_coord[i]);
+    b_map_vector[b_vector[i]].push_back(i);
   }
 
   int done_count = 0;
-  for (int i = 0; i < n; i++) {
-    auto ai = a_set_vector.find(a_vector[i]);
-    if (ai != a_set_vector.end()) {
+
+  for (auto [key, b_list] : b_map_vector) {
+    auto a_list = a_map_vector[key];
+    for (int i = 0; i < std::min(a_list.size(), b_list.size()); i++) {
       done_count = std::max(
-          done_count, move_picture(a_coord, b_coord,
-                                   std::distance(a_set_vector.begin(), ai), i,
-                                   b_set_coord));
+          done_count,
+          move_picture(a_coord, b_coord, a_list[i], b_list[i], b_set_coord));
     }
   }
 
