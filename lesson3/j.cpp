@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <climits>
 #include <iostream>
+#include <map>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -41,7 +42,7 @@ int main() {
 
   int done = 0, timeslot = 1;
   while (done != n - 1 && timeslot < n * k) {
-    std::unordered_map<int, std::vector<Request>> request_queue(n);
+    std::map<int, std::vector<Request>> request_queue;
     // TODO: replace with O(1) algorithm
     // Update network parts count
     int min_downloads_number = n * k + 1;
@@ -62,46 +63,69 @@ int main() {
       int request_part = -1;
       for (int j = 0; j < k; ++j) {                 // Min number
         if (devices[i].downloaded_parts[j] == 0) {  // Absent
-          if (parts_count_over_network[j] <=
-              min_downloads_number) {  // Leat downloaded
+          if (request_part == -1 || parts_count_over_network[j] <
+                                        parts_count_over_network[request_part])
             request_part = j;
-          } else {
-            continue;
+          if (parts_count_over_network[j] <=
+              min_downloads_number) {  // Least downloaded
+            request_part = j;
+            break;
           }
-          int best_index = -1;
-          for (int d = 0; d < n; ++d) {  // Min number
-            int min_downloaded_parts = k + 1;
-            if (devices[d].downloaded_parts[j] == 1) {  // Part present
-              if (devices[d].downloaded_parts_count <=
-                  min_downloaded_parts) {  // Min downloaded parts
-                min_downloaded_parts = devices[d].downloaded_parts_count;
-                best_index = d;
-              }
-            }
-          }
-          request_queue[best_index].push_back(
-              {i, request_part, devices[best_index].value[i],
-               devices[i].downloaded_parts_count});
-          break;
         }
       }
+
+      // choose device to request
+      int best_index = -1;
+      int min_downloaded_parts = k + 1;
+      for (int d = n - 1; d >= 0; d--) {                       // Min number
+        if (devices[d].downloaded_parts[request_part] == 1) {  // Part present
+          if (devices[d].downloaded_parts_count <=
+              min_downloaded_parts) {  // Min downloaded parts
+            min_downloaded_parts = devices[d].downloaded_parts_count;
+            best_index = d;
+          }
+        }
+      }
+      request_queue[best_index].emplace_back(i, request_part,
+                                             devices[best_index].value[i],
+                                             devices[i].downloaded_parts_count);
+      //   break;
+
     }  //  create request loop
     // accept request
+    // std::cout << "Timeslot: " << timeslot << " " << std::endl;
+    // std::cout << "----------------------" << std::endl;
     for (auto [request_to, request] : request_queue) {
       std::sort(request.begin(), request.end(), [](auto &a, auto &b) {
         if (a.value > b.value) {
           return true;
         } else if (a.value == b.value) {
-          return a.downloaded < b.downloaded;
-        } else if (a.downloaded == b.downloaded) {
-          return a.from < b.from;
+          if (a.downloaded < b.downloaded) {
+            return true;
+          } else if (a.downloaded == b.downloaded) {
+            return a.from < b.from;
+          }
         }
         return false;
       });
+
       devices[request[0].from].downloaded_parts_count++;
       devices[request[0].from].downloaded_parts[request[0].part] = 1;
       devices[request[0].from].value[request_to]++;
       parts_count_over_network[request[0].part]++;
+
+      // std::cout << "DeviceID:" << request[0].from + 1
+      //           << ".Downloaded part:" << request[0].part + 1
+      //           << " From DeviceID:" << request_to + 1 << ". Total:";
+      // int id = 0;
+      // for (auto p : devices[request[0].from].downloaded_parts) {
+      //   std::cout << p;
+      //   if (id++ != devices[request[0].from].downloaded_parts.size() - 1) {
+      //     std::cout << ",";
+      //   }
+      // }
+      // std::cout << std::endl;
+
       if (devices[request[0].from].downloaded_parts_count == k) {
         time_slots_elapsed[request[0].from] = timeslot;
         done++;
