@@ -2,53 +2,39 @@
 #include <iostream>
 #include <vector>
 
-long long sum(const std::vector<int> &a, int start, int length, long long s,
-              const std::vector<long long> &pre_sum) {
-  long long res =
-      start + length - 1 < a.size()
-          ? pre_sum[start + length - 1] - pre_sum[start] + a[start + length - 1]
-          : s + 1;
-  return res;
+long long ships(long long k) {
+  //   long long res = 0;
+  //   k0 = (k - 0 - 0) * (1 + 0) + (1 + 0);
+  //   k1 = (k0 - 1 - 1) * (1 + 1) + (1 + 1);
+  //   kn = (k[n - 1] - 1 - n) * (1 + n) + (1 + n);
+  //   k0 = (k - 0) * (1 + 0) + (1 + 0);
+  //   k1 = (k - 1) * (1 + 1) + (1 + 1);
+  //   kn = (k - n) * (1 + n) + (1 + n);  // n<k
+  //   for (int i = 0; i < k; i++) {
+  //     res += (k - i) * (1 + i) + (1 + i);
+  //   }
+  return res - 1;
 }
 
-int l_bin_search(const std::vector<int> &a, long l, long long s,
-                 const std::vector<long long> &pre_sum) {
-  int start = 0, end = a.size() - 1;
-  int mid = 0;
+long long r_bin_search(long long n) {
+  long long start = 0, end = n;
+  long long mid = 0;
+  long long k;
   while (start < end) {
-    mid = (start + end) / 2;
-    if (sum(a, mid, l, s, pre_sum) >= s) {
-      end = mid;
+    mid = (start + end + 1) / 2;
+    k = ships(mid);
+    if (k > n) {
+      end = mid - 1;
     } else {
-      start = mid + 1;
+      start = mid;
     }
   }
-  return sum(a, start, l, s, pre_sum) == s ? start + 1 : -1;
+  return start;
 }
 
-int find_start_number(const std::vector<int> &a, long l, long long s,
-                      const std::vector<long long> &pre_sum) {
-  int start_number = l_bin_search(a, l, s, pre_sum);
-  return start_number;
-}
 int main(void) {
-  int n, m;
-  std::cin >> n >> m;
-  std::vector<int> a(n);
-  std::vector<long long> pre_sum(n, 0);
-  for (int i = 0; i < n; i++) {
-    std::cin >> a[i];
-    if (i > 0) pre_sum[i] = pre_sum[i - 1] + a[i - 1];
-  }
-
-  std::vector<long> l(m);
-  std::vector<long long> s(m);
-  for (int i = 0; i < m; i++) {
-    std::cin >> l[i] >> s[i];
-  }
-
-  for (int i = 0; i < m; i++) {
-    std::cout << find_start_number(a, l[i], s[i], pre_sum) << "\n";
-  }
+  long long n;
+  std::cin >> n;
+  std::cout << r_bin_search(n);
   return 0;
 }
