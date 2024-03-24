@@ -17,9 +17,9 @@ def run_test(data, **kwargs):
     print(out)
     res = list(out.split("\n"))
     if kwargs.get("answer") and len(res) > 0:
-        if res[:-1] != kwargs.get("answer").split("\n"):
+        if res != kwargs.get("answer").split("\n"):
             answer = kwargs.get("answer").split("\n")
-            print(f"WRONG ANSWER: {res[:-1]} != {answer}")
+            print(f"WRONG ANSWER: {res} != {answer}")
             return
 
     if kwargs.get("value") != None and len(res) > 1:
@@ -28,7 +28,7 @@ def run_test(data, **kwargs):
                 f"WRONG VALUE: {res[1:]} != {kwargs.get('value')}")
 
 
-task_name = "c.cpp"
+task_name = "b.cpp"
 parser = argparse.ArgumentParser(description='My example explanation')
 parser.add_argument('-d', '--debug', action='store_true', help='Debug mode')
 args = parser.parse_args()
@@ -38,40 +38,13 @@ else:
     result = subprocess.run(["g++", "-std=c++20", "-g", "-O3",  task_name])
 if result.returncode == 0:
 
-    run_test("""
-5 2
-1 3 5 7 9
-2 4
-1 3
-""", answer="""1
-2""", comment="test 1")
-
-    run_test("""
-5 2
-1 3 5 7 9
-4 24
-1 9
-""", answer="""2
-5""", comment="test 2")
-
-    run_test("""
-1 1
-1 
-1 1
-""", answer="""1""", comment="test 3")
-
-    run_test("""
-1 1
-1 
-1 100
-""", answer="""-1""", comment="test 4")
-
-    run_test("""
-7 3
-1 1 3 4 5 7 9
-4 240
-2 9
-1 9
-""", answer="""-1
-4
-7""", comment="test 5")
+    run_test("7", answer="2", comment="test 1")
+    run_test("0", answer="0", comment="input = 0")
+    run_test("1", answer="1", comment="input = 1")
+    run_test("2", answer="1", comment="input = 2")
+    run_test("5", answer="1", comment="test 5")
+    run_test("200", answer="8", comment="test 11")
+    run_test("117055765888857794", answer="888887", comment="test 42")
+    run_test("973622521965965999", answer="1800999", comment="test 49")
+    run_test("1000000000000000000", answer="1817118",
+             comment="Dont know right answer")

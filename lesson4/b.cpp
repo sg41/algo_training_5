@@ -1,20 +1,21 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
+//   k0 = (k - 0 - 0) * (1 + 0) + (1 + 0);
+//   k1 = (k0 - 1 - 1) * (1 + 1) + (1 + 1);
+//   kn = (k[n - 1] - 1 - n) * (1 + n) + (1 + n);
+//   k0 = (n - 0) * (1 + 0) + (1 + 0);
+//   k1 = (n - 1) * (1 + 1) + (1 + 1);
+//   kn = (n - n+1) * (1 + n) + (1 + n);  // n<k
 
-long long ships(long long k) {
-  //   long long res = 0;
-  //   k0 = (k - 0 - 0) * (1 + 0) + (1 + 0);
-  //   k1 = (k0 - 1 - 1) * (1 + 1) + (1 + 1);
-  //   kn = (k[n - 1] - 1 - n) * (1 + n) + (1 + n);
-  //   k0 = (k - 0) * (1 + 0) + (1 + 0);
-  //   k1 = (k - 1) * (1 + 1) + (1 + 1);
-  //   kn = (k - n) * (1 + n) + (1 + n);  // n<k
-  //   for (int i = 0; i < k; i++) {
-  //     res += (k - i) * (1 + i) + (1 + i);
-  //   }
+long long ships(long long n) {
+  long long res = 0;
+  for (int i = 0; i < n; i++) {
+    res += (n - i) * (1 + i) + (1 + i);
+  }
   return res - 1;
 }
+// long long ships(long long n) { return n * (n + 1) * (n + 2) / 6; }
 
 long long r_bin_search(long long n) {
   long long start = 0, end = n;
