@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <climits>
 #include <cmath>
+#include <fstream>
 #include <iostream>
 #include <unordered_set>
 #include <vector>
@@ -49,6 +50,28 @@ bool check(long x_width, std::vector<std::pair<long, long>> tiles,
   long delta_y = max_y - min_y + 1;
   return delta_y <= x_width;
 }
+bool check_h(long width, std::vector<std::pair<long, long>> tiles,
+             long start_index) {
+  long start_y = tiles[start_index].second;
+  long end_y = start_y + width - 1;
+  long max = LONG_MIN, min = LONG_MAX;
+  // if (end_index < tiles.size()) {
+  for (int i = 0; i < tiles.size(); i++) {
+    if (tiles[i].second < start_y || tiles[i].second > end_y) {
+      min = tiles[i].first;
+      break;
+    }
+  }
+  for (int i = tiles.size() - 1; i >= 0; i--) {
+    if (tiles[i].second < start_y || tiles[i].second > end_y) {
+      max = tiles[i].first;
+      break;
+    }
+  }
+  // }
+  long delta = max - min + 1;
+  return delta <= width;
+}
 
 long find_min_width(std::vector<std::pair<long, long>> tiles, long max_w,
                     long i) {
@@ -56,7 +79,7 @@ long find_min_width(std::vector<std::pair<long, long>> tiles, long max_w,
   long mid = 0;
   while (start < end) {
     mid = (start + end) / 2;
-    if (check(mid, tiles, i)) {
+    if (check_h(mid, tiles, i)) {
       end = mid;
     } else {
       start = mid + 1;
@@ -66,11 +89,15 @@ long find_min_width(std::vector<std::pair<long, long>> tiles, long max_w,
 }
 int main(void) {
   long w, h, n;
+  // std::ifstream f("22.txt");
+  // f >> w >> h >> n;
   std::cin >> w >> h >> n;
   std::vector<std::pair<long, long>> tiles(n);
   for (int i = 0; i < n; i++) {
+    // f >> tiles[i].first >> tiles[i].second;
     std::cin >> tiles[i].first >> tiles[i].second;
   }
+  // f.close();
   std::sort(tiles.begin(), tiles.end());
 
   long min = std::max(w, h);
