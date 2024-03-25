@@ -2063,4 +2063,4 @@ if result.returncode == 0:
 
     timeit.timeit('''f=open("22.txt", "r")
 with f:
-        run_test(f.read(), answer="3", comment="test 22")''', setup="from __main__ import run_test", number=1)
+        run_test(f.read(), answer="1500", comment="test 22")''', setup="from __main__ import run_test", number=1)
