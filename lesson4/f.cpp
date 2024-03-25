@@ -1,13 +1,13 @@
 #include <algorithm>
+#include <climits>
 #include <cmath>
 #include <iostream>
 #include <unordered_set>
 #include <vector>
 
-long long l_bin_serach(std::vector<std::pair<long long, long long>> a,
-                       long long x) {
-  long long s = 0, e = a.size() - 1;
-  long long mid = 0;
+long l_bin_serach(std::vector<std::pair<long, long>> a, long x) {
+  long s = 0, e = a.size() - 1;
+  long mid = 0;
   while (s < e) {
     mid = (s + e) / 2;
     if (a[mid].first >= x) {
@@ -18,10 +18,9 @@ long long l_bin_serach(std::vector<std::pair<long long, long long>> a,
   }
   return a[s].first < x ? s + 1 : s;
 }
-long long r_bin_serach(std::vector<std::pair<long long, long long>> a,
-                       long long x) {
-  long long s = 0, e = a.size() - 1;
-  long long mid = 0;
+long r_bin_serach(std::vector<std::pair<long, long>> a, long x) {
+  long s = 0, e = a.size() - 1;
+  long mid = 0;
   while (s < e) {
     mid = (s + e + 1) / 2;
     if (a[mid].first > x) {
@@ -32,14 +31,12 @@ long long r_bin_serach(std::vector<std::pair<long long, long long>> a,
   }
   return s;  // a[s].first < x ? s + 1 : s;
 }
-bool check(long x_width, std::vector<std::pair<long long, long long>> tiles,
-           long long start_index) {
-  long long start_x = tiles[start_index].first;
-  long long end_index = r_bin_serach(tiles, start_x + x_width);
-  long long max_y = 0, min_y = 0;
+bool check(long x_width, std::vector<std::pair<long, long>> tiles,
+           long start_index) {
+  long start_x = tiles[start_index].first;
+  long end_index = r_bin_serach(tiles, start_x + x_width - 1);
+  long max_y = LONG_MIN, min_y = LONG_MAX;
   if (end_index < tiles.size()) {
-    max_y = tiles[end_index].second;
-    min_y = tiles[end_index].second;
     for (int i = 0; i < start_index; i++) {
       if (max_y < tiles[i].second) max_y = tiles[i].second;
       if (min_y > tiles[i].second) min_y = tiles[i].second;
@@ -49,12 +46,12 @@ bool check(long x_width, std::vector<std::pair<long long, long long>> tiles,
       if (min_y > tiles[i].second) min_y = tiles[i].second;
     }
   }
-  long long delta_y = max_y - min_y;
-  return delta_y < x_width;
+  long delta_y = max_y - min_y + 1;
+  return delta_y <= x_width;
 }
 
-long find_min_width(std::vector<std::pair<long long, long long>> tiles,
-                    long max_w, long long i) {
+long find_min_width(std::vector<std::pair<long, long>> tiles, long max_w,
+                    long i) {
   long start = 0, end = max_w;
   long mid = 0;
   while (start < end) {
@@ -70,17 +67,15 @@ long find_min_width(std::vector<std::pair<long long, long long>> tiles,
 int main(void) {
   long w, h, n;
   std::cin >> w >> h >> n;
-  std::vector<std::pair<long long, long long>> tiles(n);
+  std::vector<std::pair<long, long>> tiles(n);
   for (int i = 0; i < n; i++) {
     std::cin >> tiles[i].first >> tiles[i].second;
-    tiles[i].first;
-    tiles[i].second;
   }
   std::sort(tiles.begin(), tiles.end());
 
-  long long min = std::max(w, h);
+  long min = std::max(w, h);
   for (int i = 0; i < n; i++) {
-    long long width = find_min_width(tiles, std::min(w, h), i);
+    long width = find_min_width(tiles, std::min(w, h), i);
     if (width < min) min = width;
   }
   std::cout << min;
