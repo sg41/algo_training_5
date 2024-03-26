@@ -93,6 +93,7 @@ int main(void) {
   // f >> w >> h >> n;
   std::cin >> w >> h >> n;
   std::vector<std::pair<long, long>> tiles(n);
+
   for (int i = 0; i < n; i++) {
     // f >> tiles[i].first >> tiles[i].second;
     std::cin >> tiles[i].first >> tiles[i].second;

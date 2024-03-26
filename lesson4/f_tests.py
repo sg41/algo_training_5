@@ -2061,6 +2061,10 @@ if result.returncode == 0:
 141 479
 """, answer="50", comment="test 9")
 
+    timeit.timeit('''f=open("10.txt", "r")
+with f:
+        run_test(f.read(), answer="1713", comment="test 10")''', setup="from __main__ import run_test", number=1)
+
     timeit.timeit('''f=open("22.txt", "r")
 with f:
         run_test(f.read(), answer="1500", comment="test 22")''', setup="from __main__ import run_test", number=1)
