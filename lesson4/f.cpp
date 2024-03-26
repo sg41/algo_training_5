@@ -73,6 +73,16 @@ bool check_h(long width, std::vector<std::pair<long, long>> tiles,
   return delta <= width;
 }
 
+bool check_all(long width, std::vector<std::pair<long, long>> tiles,
+               long start_index) {
+  bool result = false;
+  for (int i = 0; i < tiles.size(); i++) {
+    result = check_h(width, tiles, i);
+    if (result) break;
+  }
+  return result;
+}
+
 long find_min_width(std::vector<std::pair<long, long>> tiles, long max_w,
                     long i) {
   long start = 0, end = max_w;
@@ -93,6 +103,8 @@ int main(void) {
   // f >> w >> h >> n;
   std::cin >> w >> h >> n;
   std::vector<std::pair<long, long>> tiles(n);
+  std::unordered_map<long, std::pair<long, long>> row_max_x;
+  std::unordered_map<long, std::pair<long, long>> row_min_x;
 
   for (int i = 0; i < n; i++) {
     // f >> tiles[i].first >> tiles[i].second;
@@ -101,12 +113,19 @@ int main(void) {
   // f.close();
   std::sort(tiles.begin(), tiles.end());
 
+  // for(int i = 0; i < n; i++) {
+  //   // if(tiles[i].first > row_max_x[tiles[i].second].first){
+  //   //   row_max_x[tiles[i].second].first = tiles[i].first;
+  //   // } else if(tiles[i].first < row_min_x[tiles[i].second].second){
+  //   //   row_min_x[tiles[i].second].second = tiles[i].first;
+  //   // }
+  // }
   long min = std::max(w, h);
-  for (int i = 0; i < n; i++) {
-    long width = find_min_width(tiles, std::min(w, h), i);
-    if (width < min) min = width;
-  }
-  std::cout << min;
+  // for (int i = 0; i < n; i++) {
+  long width = find_min_width(tiles, std::min(w, h), 0);
+  // if (width < min) min = width;
+  // }
+  std::cout << width;
 
   return 0;
 }
