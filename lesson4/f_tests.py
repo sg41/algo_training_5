@@ -2061,10 +2061,22 @@ if result.returncode == 0:
 141 479
 """, answer="50", comment="test 9")
 
-    timeit.timeit('''f=open("10.txt", "r")
+    print(timeit.timeit('''f=open("10.txt", "r")
 with f:
-        run_test(f.read(), answer="1713", comment="test 10")''', setup="from __main__ import run_test", number=1)
+        run_test(f.read(), answer="1713", comment="test 10")''', setup="from __main__ import run_test", number=1))
 
-    timeit.timeit('''f=open("22.txt", "r")
+    print(timeit.timeit('''f=open("12.txt", "r")
 with f:
-        run_test(f.read(), answer="1500", comment="test 22")''', setup="from __main__ import run_test", number=1)
+        run_test(f.read(), answer="1701", comment="test 12")''', setup="from __main__ import run_test", number=1))
+
+    print(timeit.timeit('''f=open("13.txt", "r")
+with f:
+        run_test(f.read(), answer="1716", comment="test 13")''', setup="from __main__ import run_test", number=1))
+
+    print(timeit.timeit('''f=open("22.txt", "r")
+with f:
+        run_test(f.read(), answer="1500", comment="test 22")''', setup="from __main__ import run_test", number=1))
+
+    print(timeit.timeit('''f=open("51.txt", "r")
+with f:
+        run_test(f.read(), answer="50", comment="test 51")''', setup="from __main__ import run_test", number=1))
