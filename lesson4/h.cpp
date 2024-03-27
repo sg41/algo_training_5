@@ -8,6 +8,23 @@ struct Info {
   int number;
 };
 
+bool calc_new_votes(const std::vector<Info>& partys, long long bribe,
+                    int party_number, std::vector<long>& new_votes) {
+  long long paid = 0;
+  long long my_party_votes = partys[party_number].votes;
+  for (int i = 0; i < partys.size(); i++) {
+    if (partys[i].votes >= my_party_votes) {
+      long votes_to_buy = (partys[i].votes - my_party_votes) / 2 + 1;
+      paid += votes_to_buy;
+      my_party_votes += votes_to_buy;
+      new_votes[partys[i].number] = partys[i].votes - votes_to_buy;
+    } else {
+      break;
+    }
+  }
+  new_votes[partys[party_number].number] = my_party_votes;
+  return paid + partys[party_number].bribe <= bribe;
+}
 bool calc_votes(const std::vector<Info>& partys, long long bribe,
                 int party_number) {
   long long paid = 0;
@@ -38,15 +55,13 @@ long long l_bin_search(const std::vector<Info>& partys, int party_number,
   return start;
 }
 
-std::pair<long long, long> bribe_elections(const std::vector<Info>& partys_orig,
+std::pair<long long, long> bribe_elections(const std::vector<Info>& partys,
                                            std::vector<long>& new_votes,
                                            long long total_votes,
                                            long long max_bribe) {
   long long total_bribe = max_bribe + 1;
   long party_number = 0;
-  auto partys = partys_orig;
-  std::sort(partys.begin(), partys.end(),
-            [](const Info& a, const Info& b) { return a.votes > b.votes; });
+
   for (int i = 0; i < partys.size(); i++) {
     if (partys[i].bribe > 0) {
       long long bribe = l_bin_search(partys, i, max_bribe);
@@ -56,7 +71,7 @@ std::pair<long long, long> bribe_elections(const std::vector<Info>& partys_orig,
       }
     }
   }
-  return std::make_pair(total_bribe, partys[party_number].number);
+  return std::make_pair(total_bribe, party_number);
 }
 
 int main(void) {
@@ -71,6 +86,7 @@ int main(void) {
   for (int i = 0; i < n; i++) {
     std::cin >> partys[i].votes >> partys[i].bribe;
     partys[i].number = i;
+    new_votes[i] = partys[i].votes;
     total_votes += partys[i].votes;
     if (partys[i].bribe > 0) {
       bribe_partys[i] = partys[i];
@@ -81,12 +97,17 @@ int main(void) {
   }
   long long total_bribe = 0;
   long party_number = 0;
+  auto sorted_partys = partys;
+  std::sort(sorted_partys.begin(), sorted_partys.end(),
+            [](const Info& a, const Info& b) { return a.votes > b.votes; });
   std::tie(total_bribe, party_number) =
-      bribe_elections(partys, new_votes, total_votes, max_bribe);
-  std::cout << total_bribe << "\n" << party_number << std::endl;
+      bribe_elections(sorted_partys, new_votes, total_votes, max_bribe);
+  std::cout << total_bribe << "\n" << party_number + 1 << std::endl;
+  calc_new_votes(sorted_partys, total_bribe, party_number, new_votes);
   for (auto v : new_votes) {
     std::cout << v << " ";
   }
+  std::cout << std::endl;
 
   return 0;
 }
