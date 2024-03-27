@@ -17,7 +17,8 @@ def run_test(data, **kwargs):
         print("RE")
     # print(data)
     print(out)
-    res = list(out.split("\n"))
+    res = out.split("\n")
+    res = [r.strip() for r in res]
     if kwargs.get("answer") and len(res) > 0:
         if res != kwargs.get("answer").split("\n"):
             answer = kwargs.get("answer").split("\n")
