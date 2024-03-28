@@ -21,7 +21,7 @@ bool calc_new_votes(const std::vector<Info>& partys, long long bribe,
       my_party_votes += votes_to_buy;
       new_votes[partys[i].number] = partys[i].votes - votes_to_buy;
     } else {
-      victory_size = my_party_votes - partys[i"].votes;
+      victory_size = my_party_votes - partys[i].votes;
       break;
     }
   }
