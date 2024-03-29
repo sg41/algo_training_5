@@ -58,6 +58,14 @@ if result.returncode == 0:
 240 238
 """, comment="test 4")
 
+    run_test("""2
+239 239
+240 -1
+""", answer="""240
+1
+240 239
+""", comment="test 5")
+
     run_test("""3
 6 8
 4 6

@@ -44,14 +44,16 @@ std::pair<long long, int> l_bin_search_votes(const std::vector<Info>& partys,
     int mid = (start + end) / 2;
     std::tie(votes_to_buy, partys_to_buy) =
         calc_number(partys, mid, party_number);
-    if (partys[party_number].votes + votes_to_buy <= mid + 1) {
-      end = mid;
+    if (partys[party_number].votes + votes_to_buy < mid + 1) {
+      end = mid - 1;
+    } else if (partys[party_number].votes + votes_to_buy == mid + 1) {
+      break;
     } else {
       start = mid + 1;
     }
   }
-  std::tie(votes_to_buy, partys_to_buy) =
-      calc_number(partys, start, party_number);
+  // std::tie(votes_to_buy, partys_to_buy) =
+  //     calc_number(partys, start, party_number);
   return std::make_pair(votes_to_buy, partys_to_buy);
 }
 
