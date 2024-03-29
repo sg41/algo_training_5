@@ -76,6 +76,14 @@ if result.returncode == 0:
 """, comment="test 8")
 
     run_test("""2
+1000000 -1
+1 1000000
+""", answer="""1500000
+2
+500000 500001
+""", comment="test 9")
+
+    run_test("""2
 1 1
 1 1
 """, answer="""2
