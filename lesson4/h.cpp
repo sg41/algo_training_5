@@ -21,10 +21,10 @@ std::pair<long long, int> calc_number(const std::vector<Info>& partys,
     if (partys[i].votes > votes) {
       res += partys[i].votes - votes;
       count++;
-    } else if (res < need_votes) {
-      res += need_votes;
-      count++;
-      break;
+      // } else if (res < need_votes) {
+      //   res += need_votes;
+      //   count++;
+      //   break;
     } else {
       break;
     }
