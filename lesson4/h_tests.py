@@ -82,7 +82,8 @@ if result.returncode == 0:
 68 5
 """, answer="""7
 4
-68 69 69 68""", comment="test no number")
+68 69 69 70
+""", comment="test no number")
 
     run_test("""50
 1 2

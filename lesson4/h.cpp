@@ -63,7 +63,7 @@ bool calc_new_votes(const std::vector<Info>& partys, long long bribe,
   if (calc_new_votes) {
     long long my_party_votes = partys[party_number].votes + paid;
     new_votes[partys[party_number].number] = my_party_votes;
-    int parts = partys_to_buy;
+    int parts = partys_to_buy == 0 ? 1 : partys_to_buy;
     if (party_number < partys_to_buy && partys_to_buy > 1) {
       parts = partys_to_buy - 1;
     }
