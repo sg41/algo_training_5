@@ -14,15 +14,16 @@ struct Info {
 std::pair<long long, int> calc_number(const std::vector<Info>& partys,
                                       long votes, int party_number) {
   long res = 0, count = 0;
-  long need_votes = votes - partys[party_number].votes + 1;
+  long need_votes = votes - partys[party_number].votes + 0;
   for (int i = 0; i < partys.size(); i++) {
     if (i == party_number) {
       count++;
       continue;
     }
     if (partys[i].votes > partys[party_number].votes + res) {
-      res += (partys[i].votes - votes) > 0 ? partys[i].votes - votes + 1
-                                           : need_votes;
+      // res += partys[i].votes - partys[party_number].votes - res;
+      res += (partys[i].votes - votes) > 0 ? partys[i].votes - votes + 1 : 1;
+      //!  : need_votes;
       count++;
     } else if (partys[i].votes == partys[party_number].votes + res) {
       res += 1;
@@ -39,6 +40,7 @@ std::pair<long long, int> l_bin_search_votes(const std::vector<Info>& partys,
                                              bool calc_new_votes = false) {
   int start = 0, end = partys[0].votes + 1;
   long long votes_to_buy = 0;
+  long long prev_votes = 0;
   int partys_to_buy = 0;
   while (start < end) {
     int mid = (start + end) / 2;
@@ -51,9 +53,12 @@ std::pair<long long, int> l_bin_search_votes(const std::vector<Info>& partys,
     } else {
       start = mid + 1;
     }
+    // if (votes_to_buy == prev_votes) {
+    //   break;
+    // } else {
+    //   prev_votes = votes_to_buy;
+    // }
   }
-  // std::tie(votes_to_buy, partys_to_buy) =
-  //     calc_number(partys, start, party_number);
   return std::make_pair(votes_to_buy, partys_to_buy);
 }
 
